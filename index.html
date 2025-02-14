@@ -70,11 +70,26 @@
     </div>
 
 <canvas id="birthday"></canvas>
+<canvas id="birthday"></canvas>
+<audio id="firework-bg" loop>
+    <source src="https://www.soundjay.com/fireworks/sounds/fireworks-1.mp3" type="audio/mpeg">
+</audio>
+<audio id="firework-explode">
+    <source src="https://www.soundjay.com/fireworks/sounds/firework-burst-1.mp3" type="audio/mpeg">
+</audio>
+
 <script>
     // Helper functions
     const PI2 = Math.PI * 2;
     const random = (min, max) => (Math.random() * (max - min + 1) + min) | 0;
     const timestamp = () => new Date().getTime();
+
+    // Play background firework sound when page loads
+    window.onload = () => {
+        let bgSound = document.getElementById("firework-bg");
+        bgSound.volume = 0.2; // Lower volume for ambient effect
+        bgSound.play().catch(err => console.log("Autoplay blocked:", err));
+    };
 
     // Firework Container
     class Birthday {
@@ -105,7 +120,7 @@
                     this.height,
                     x, y,
                     random(0, 360),
-                    random(40, 130) // Increased explosion radius
+                    random(40, 130)
                 ));
             }
 
@@ -128,7 +143,7 @@
                     random(0, this.width),
                     random(this.spawnC, this.spawnD),
                     random(0, 360),
-                    random(40, 130) // More dynamic explosions
+                    random(40, 130)
                 ));
                 this.counter = 0;
             }
@@ -147,6 +162,7 @@
             this.targetY = targetY;
             this.shade = shade;
             this.history = [];
+            this.exploded = false;
         }
 
         update(delta) {
@@ -162,6 +178,11 @@
                 this.history.push({ x: this.x, y: this.y });
                 if (this.history.length > 15) this.history.shift();
             } else {
+                if (!this.exploded) {
+                    this.playExplosionSound();
+                    this.exploded = true;
+                }
+
                 if (this.offsprings && !this.madeChilds) {
                     let babies = this.offsprings / 2;
                     for (let i = 0; i < babies; i++) {
@@ -180,16 +201,23 @@
                 for (let i = 0; i < this.history.length; i++) {
                     let point = this.history[i];
                     ctx.beginPath();
-                    ctx.fillStyle = `hsl(${this.shade},100%,${i * 3}%)`; // Brighter fade
+                    ctx.fillStyle = `hsl(${this.shade},100%,${i * 3}%)`;
                     ctx.arc(point.x, point.y, 1.5, 0, PI2, false);
                     ctx.fill();
                 }
             } else {
                 ctx.beginPath();
                 ctx.fillStyle = `hsl(${this.shade},100%,50%)`;
-                ctx.arc(this.x, this.y, 2, 0, PI2, false); // Slightly larger particle
+                ctx.arc(this.x, this.y, 2, 0, PI2, false);
                 ctx.fill();
             }
+        }
+
+        playExplosionSound() {
+            let sound = document.getElementById("firework-explode");
+            sound.currentTime = 0;
+            sound.volume = 0.5; // Adjust explosion sound volume
+            sound.play().catch(err => console.log("Explosion sound blocked:", err));
         }
     }
 
@@ -211,6 +239,7 @@
         birthday.update(delta);
     })();
 </script>
+
 
 </body>
 </html>
