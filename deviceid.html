@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Device ID + Table</title>
+    <style>
+        /* Make the page take the full width, remove default margins */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container spans the entire width; content is centered */
+        #container {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* The line where the device ID will be displayed */
+        #deviceIdLine {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            word-wrap: break-word; /* Wrap text if it's very long */
+        }
+
+        /* Table styling */
+        table {
+            margin: 20px auto; /* center table horizontally */
+            border-collapse: collapse;
+            width: 80%; /* adjust width as desired */
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Button styling */
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Button to trigger display of "Device ID" and the table -->
+        <button id="getDeviceIdBtn">Get Device ID</button>
+
+        <!-- Device ID line -->
+        <div id="deviceIdLine"></div>
+
+        <!-- Table for additional device details -->
+        <table id="deviceInfoTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be inserted here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById("getDeviceIdBtn").addEventListener("click", function () {
+            // 1) Use the user agent string as a "Device ID"
+            const deviceId = navigator.userAgent;
+
+            // Display the device ID
+            const deviceIdLine = document.getElementById("deviceIdLine");
+            deviceIdLine.textContent = "Device ID: " + deviceId;
+
+            // 2) Gather additional device details for the table
+            const deviceInfo = [
+                { feature: "Platform", detail: navigator.platform },
+                { feature: "Screen Resolution", detail: window.screen.width + " x " + window.screen.height },
+                { feature: "Window Size", detail: window.innerWidth + " x " + window.innerHeight },
+                { feature: "Screen Color Depth", detail: window.screen.colorDepth + " bits" },
+                { feature: "Browser Language", detail: navigator.language || navigator.userLanguage },
+                { feature: "Online Status", detail: navigator.onLine ? "Online" : "Offline" },
+                { feature: "Cookies Enabled", detail: navigator.cookieEnabled ? "Yes" : "No" }
+            ];
+
+            // 3) Populate the table
+            const table = document.getElementById("deviceInfoTable");
+            const tbody = table.querySelector("tbody");
+
+            // Clear any existing rows
+            tbody.innerHTML = "";
+
+            // Create a row for each piece of device info
+            deviceInfo.forEach(item => {
+                const row = document.createElement("tr");
+                const featureCell = document.createElement("td");
+                const detailCell = document.createElement("td");
+
+                featureCell.textContent = item.feature;
+                detailCell.textContent = item.detail;
+
+                row.appendChild(featureCell);
+                row.appendChild(detailCell);
+                tbody.appendChild(row);
+            });
+
+            // Show the table
+            table.style.display = "table";
+
+            // 4) Hide the button
+            this.style.display = "none";
+        });
+    </script>
+</body>
+</html>
