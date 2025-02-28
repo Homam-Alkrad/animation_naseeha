@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebration Box 🎉</title>
+
+    <!-- Celebration Styles -->
+    <style>
+        body {
+            margin: 0;
+            background: #0a1f44; /* Dark blue background for night sky */
+            cursor: crosshair;
+            overflow: hidden; /* Prevents unwanted scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Send fireworks to background */
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 1; /* Keep text above fireworks */
+            text-align: center;
+            width: 100%;
+        }
+
+        h3 {
+            margin: 20px 0;
+            color: #fff;
+            font-family: "Source Sans Pro", sans-serif;
+            font-weight: 900;
+            font-size: 5vw; /* Responsive font size */
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Crescent Moon and Text Container */
+        .moon-text-container {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between moon and text */
+            z-index: 1; /* Keep above fireworks */
+        }
+
+        .crescent-moon {
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            border-radius: 50%;
+            box-shadow: -15px 0 0 0 #f5f5f5; /* Crescent shape */
+            animation: glow 3s infinite alternate;
+        }
+
+        .moon-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            color: #fff;
+            font-family: "Aref Ruqaa", serif;
+        }
+
+            .moon-text span:first-child {
+                font-size: 2.5em; /* Larger text for "رمضان" */
+                font-weight: bold;
+            }
+
+            .moon-text span:last-child {
+                font-size: 2em; /* Smaller text for "كريم" */
+                opacity: 0.8;
+            }
+
+        @keyframes glow {
+            0% {
+                box-shadow: -15px 0 0 0 rgba(245, 245, 245, 0.8);
+            }
+
+            100% {
+                box-shadow: -15px 0 0 10px rgba(245, 245, 245, 0.6);
+            }
+        }
+
+        /* Stars Styles */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind fireworks */
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.8;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            h3 {
+                font-size: 7vw; /* Increase font size for mobile */
+            }
+
+            .crescent-moon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .moon-text span:first-child {
+                font-size: 2em;
+            }
+
+            .moon-text span:last-child {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h3 {
+                font-size: 8vw; /* Bigger text for small screens */
+            }
+
+            .crescent-moon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .moon-text span:first-child {
+                font-size: 1.5em;
+            }
+
+            .moon-text span:last-child {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="birthday"></canvas>
+
+    <!-- Stars Container -->
+    <div class="stars" id="stars"></div>
+
+    <div class="text-container">
+        <h3> 🌟 لقد قمت بعمل رائع </h3>
+        <h3>📚💪🏼 نحو التفوق في الوزاري  </h3>
+    </div>
+
+    <!-- Crescent Moon and Text -->
+    <div class="moon-text-container">
+        <div class="crescent-moon"></div>
+        <div class="moon-text">
+            <span>رمضان</span>
+            <span>كريم</span>
+        </div>
+    </div>
+
+    <script>
+        // Helper functions
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => (Math.random() * (max - min + 1) + min) | 0;
+        const timestamp = () => new Date().getTime();
+
+        // Firework Container
+        class Birthday {
+            constructor() {
+                this.resize();
+                this.fireworks = [];
+                this.counter = 0;
+            }
+
+            resize() {
+                this.width = canvas.width = window.innerWidth;
+                this.height = canvas.height = window.innerHeight;
+                let center = this.width / 2;
+                this.spawnA = center - center / 4;
+                this.spawnB = center + center / 4;
+                this.spawnC = this.height * 0.1;
+                this.spawnD = this.height * 0.6;
+            }
+
+            onClick(evt) {
+                let x = evt.clientX || (evt.touches && evt.touches[0].pageX);
+                let y = evt.clientY || (evt.touches && evt.touches[0].pageY);
+                let count = random(3, 5); /* Reduced number of fireworks per click */
+
+                for (let i = 0; i < count; i++) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        x, y,
+                        random(0, 360),
+                        random(30, 80) /* Reduced explosion radius */
+                    ));
+                }
+
+                this.counter = -1;
+            }
+
+            update(delta) {
+                ctx.globalCompositeOperation = "hard-light";
+                ctx.fillStyle = `rgba(10, 31, 68, ${5 * delta})`; /* Darker background for night sky */
+                ctx.fillRect(0, 0, this.width, this.height);
+
+                ctx.globalCompositeOperation = "lighter";
+                for (let firework of this.fireworks) firework.update(delta);
+
+                this.counter += delta * 3; /* Reduced firework spawn rate */
+                if (this.counter >= 1) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        random(0, this.width),
+                        random(this.spawnC, this.spawnD),
+                        random(0, 360),
+                        random(30, 80) /* Smaller explosions */
+                    ));
+                    this.counter = 0;
+                }
+
+                this.fireworks = this.fireworks.filter(f => !f.dead);
+            }
+        }
+
+        class Firework {
+            constructor(x, y, targetX, targetY, shade, offsprings) {
+                this.dead = false;
+                this.offsprings = offsprings;
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.shade = shade;
+                this.history = [];
+            }
+
+            update(delta) {
+                if (this.dead) return;
+
+                let xDiff = this.targetX - this.x;
+                let yDiff = this.targetY - this.y;
+
+                if (Math.abs(xDiff) > 2 || Math.abs(yDiff) > 2) { /* Slower movement */
+                    this.x += xDiff * 2 * delta;
+                    this.y += yDiff * 2 * delta;
+
+                    this.history.push({ x: this.x, y: this.y });
+                    if (this.history.length > 10) this.history.shift();
+                } else {
+                    if (this.offsprings && !this.madeChilds) {
+                        let babies = this.offsprings / 2;
+                        for (let i = 0; i < babies; i++) {
+                            let targetX = this.x + this.offsprings * Math.cos((PI2 * i) / babies);
+                            let targetY = this.y + this.offsprings * Math.sin((PI2 * i) / babies);
+
+                            birthday.fireworks.push(new Firework(this.x, this.y, targetX, targetY, random(this.shade - 20, this.shade + 20), 0));
+                        }
+                    }
+                    this.madeChilds = true;
+                    this.history.shift();
+                }
+
+                if (this.history.length === 0) this.dead = true;
+                else if (this.offsprings) {
+                    for (let i = 0; i < this.history.length; i++) {
+                        let point = this.history[i];
+                        ctx.beginPath();
+                        ctx.fillStyle = `hsl(${this.shade},100%,${i * 3}%)`; /* Brighter fade */
+                        ctx.arc(point.x, point.y, 1, 0, PI2, false); /* Smaller particles */
+                        ctx.fill();
+                    }
+                } else {
+                    ctx.beginPath();
+                    ctx.fillStyle = `hsl(${this.shade},100%,50%)`;
+                    ctx.arc(this.x, this.y, 1.5, 0, PI2, false); /* Smaller particle */
+                    ctx.fill();
+                }
+            }
+        }
+
+        let canvas = document.getElementById("birthday");
+        let ctx = canvas.getContext("2d");
+
+        let then = timestamp();
+        let birthday = new Birthday();
+
+        window.onresize = () => birthday.resize();
+        document.onclick = (evt) => birthday.onClick(evt);
+        document.ontouchstart = (evt) => birthday.onClick(evt);
+
+        // Generate Stars
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 200; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+            star.style.top = `${random(0, 100)}%`;
+            star.style.left = `${random(0, 100)}%`;
+            star.style.animationDelay = `${random(0, 2000)}ms`;
+            starsContainer.appendChild(star);
+        }
+
+        (function loop() {
+            requestAnimationFrame(loop);
+            let now = timestamp();
+            let delta = (now - then) / 1000;
+            then = now;
+            birthday.update(delta);
+        })();
+    </script>
+</body>
+</html>
