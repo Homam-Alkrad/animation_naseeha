@@ -1,26 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chemistry Celebration Box 🧪</title>
+    <title>موقع النصيحة 🌟</title>
 
-    <!-- Celebration Styles -->
     <style>
         body {
             margin: 0;
-            background: url('bg12.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            cursor: default;
+            background: #071736; /* خلفية زرقاء داكنة للسماء الليلية */
+            cursor: pointer;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-family: "Arial", sans-serif;
+            position: relative;
+            font-family: 'Tajawal', sans-serif;
         }
 
         canvas {
@@ -30,213 +27,255 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: 0; /* الألعاب النارية في الخلفية */
         }
 
         .text-container {
             position: relative;
-            z-index: 1;
+            z-index: 1; /* النص فوق الألعاب النارية */
             text-align: center;
             width: 100%;
-            padding: 20px;
-            background: url('bg12.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            max-width: 800px;
-            overflow: hidden;
         }
 
-        h3 {
+        h1 {
             margin: 20px 0;
             color: #fff;
             font-weight: 900;
             font-size: 5vw;
             text-align: center;
-            white-space: nowrap;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
-            position: relative;
-            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
         }
 
-            h3:nth-child(1) {
-                animation-delay: 0s;
+        h2 {
+            margin: 10px 0;
+            color: #f8f8f8;
+            font-weight: 700;
+            font-size: 3.5vw;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        /* النص الرئيسي */
+        .main-text-container {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+        }
+
+        .main-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            color: #fff;
+        }
+
+            .main-text span {
+                font-size: 3em;
+                font-weight: bold;
+                color: #ffd700;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             }
 
-            h3:nth-child(2) {
-                animation-delay: 0.5s;
+        /* النجوم */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star-medium {
+            width: 3px;
+            height: 3px;
+        }
+
+        .star-large {
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
             }
 
-            h3:nth-child(3) {
-                animation-delay: 1s;
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
             }
+        }
+
+        /* الرمز الكيميائي */
+        .chemical-symbol {
+            position: absolute;
+            bottom: 15%;
+            left: 15%;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 40, 80, 0.6);
+            border-radius: 50%;
+            border: 3px solid rgba(0, 200, 255, 0.7);
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.7);
+            animation: glow 4s infinite alternate;
+        }
+
+        .chemical-symbol-inner {
+            font-size: 60px;
+            font-weight: bold;
+            color: #00eeff;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+
+        .chemical-symbol-subscript {
+            font-size: 30px;
+            position: relative;
+            bottom: -15px;
+        }
 
         @keyframes glow {
             0% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.5);
-                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+                border-color: rgba(0, 200, 255, 0.7);
             }
 
             100% {
-                text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.6);
-                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+                border-color: rgba(100, 230, 255, 0.9);
             }
         }
 
-        /* Bubble effect on hover */
-        h3:hover {
-            animation: bubble 0.5s ease-in-out;
-        }
+        /* تأثيرات إضافية */
 
-        @keyframes bubble {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Chemistry Symbols */
-        .chem-symbol {
-            position: absolute;
-            font-weight: bold;
-            z-index: 0;
-            animation: fadeInChem 5s infinite;
-        }
-
-        @keyframes fadeInChem {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-        }
-
-        /* Mobile styles */
+        /* الأنماط للأجهزة المحمولة */
         @media (max-width: 768px) {
-            h3 {
-                font-size: 7vw;
+            h1 {
+                font-size: 8vw;
+            }
+
+            h2 {
+                font-size: 6vw;
+            }
+
+            .main-text span {
+                font-size: 2.2em;
+            }
+
+            .chemical-symbol {
+                bottom: 20%;
+                left: 10%;
+                width: 90px;
+                height: 90px;
+            }
+
+            .chemical-symbol-inner {
+                font-size: 45px;
+            }
+
+            .chemical-symbol-subscript {
+                font-size: 22px;
+                bottom: -10px;
             }
         }
 
         @media (max-width: 480px) {
-            h3 {
-                font-size: 8vw;
+            h1 {
+                font-size: 10vw;
             }
 
-            .text-container {
-                max-width: 90%;
+            h2 {
+                font-size: 7vw;
+            }
+
+            .main-text span {
+                font-size: 1.8em;
+            }
+
+            .main-text-container {
+                top: 5%;
+                right: 5%;
+            }
+
+            .chemical-symbol {
+                width: 70px;
+                height: 70px;
+            }
+
+            .chemical-symbol-inner {
+                font-size: 35px;
+            }
+
+            .chemical-symbol-subscript {
+                font-size: 18px;
+                bottom: -8px;
             }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="chemistry"></canvas>
+    <canvas id="fireworks"></canvas>
+
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+
+    <!-- المسجد في الخلفية -->
+    <div class="mosque"></div>
 
     <div class="text-container">
-        <!-- Chemistry Symbols -->
-        <!-- Main Text -->
-        <h3 class="animated-text">أبدعت</h3>
-        <h3 class="animated-text">ما شاء الله</h3>
-        <h3 class="animated-text">نحو التفوق الوزاري</h3>
+        <h1>أبدعت ما شاء الله</h1>
+        <h2>نحو التفوق الوزاري</h2>
+    </div>
+
+    <!-- النص الرئيسي -->
+    <div class="main-text-container">
+        <div class="main-text">
+            <span>موقع النصيحة التعليمي</span>
+        </div>
+    </div>
+
+    <!-- الرمز الكيميائي -->
+    <div class="chemical-symbol">
+        <div class="chemical-symbol-inner">
+            H<span class="chemical-symbol-subscript">2</span>O
+        </div>
     </div>
 
     <script>
-        // Helper functions
+        // دوال مساعدة
         const PI2 = Math.PI * 2;
-        const random = (min, max) => (Math.random() * (max - min + 1) + min) | 0;
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
         const timestamp = () => new Date().getTime();
 
-
-        function createDynamicSymbols() {
-            const container = document.querySelector('.text-container');
-            const containerWidth = container.offsetWidth;
-            const containerHeight = container.offsetHeight;
-
-            chemSymbols.forEach(item => {
-                const symbolEl = document.createElement('div');
-                symbolEl.classList.add('chem-symbol');
-                symbolEl.textContent = item.symbol;
-                symbolEl.style.top = `${random(10, containerHeight - 40)}px`;
-                symbolEl.style.left = `${random(10, containerWidth - 80)}px`;
-                symbolEl.style.fontSize = `${random(16, 26)}px`;
-                symbolEl.style.color = item.color;
-                symbolEl.style.animationDuration = `${random(3, 6) + Math.random()}s`;
-                symbolEl.style.animationDelay = `${Math.random() * 3}s`;
-
-                container.appendChild(symbolEl);
-            });
-        }
-
-        // Text effects
-        document.addEventListener('DOMContentLoaded', () => {
-            const texts = document.querySelectorAll('.animated-text');
-
-            // Add click effect on text
-            texts.forEach(text => {
-                text.addEventListener('click', () => {
-                    text.style.animation = 'none';
-                    text.offsetHeight; // Trigger reflow
-                    text.style.animation = 'bubble 0.5s ease-in-out';
-
-                    // Create burst effect
-                    createBurst(text);
-                });
-            });
-
-            // Create dynamic chemistry symbols
-            createDynamicSymbols();
-        });
-
-        function createBurst(element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            for (let i = 0; i < 20; i++) {
-                const particleX = centerX + random(-rect.width / 2, rect.width / 2);
-                const particleY = centerY + random(-rect.height / 2, rect.height / 2);
-
-                // Add to particle system
-                chemistryEffects.particles.push(new Particle(
-                    particleX,
-                    particleY,
-                    particleX + random(-100, 100),
-                    particleY + random(-100, 100),
-                    random(0, 360),
-                    random(10, 30),
-                    chemistryEffects.symbols[random(0, chemistryEffects.symbols.length - 1)]
-                ));
-            }
-        }
-
-        // Chemistry particle system
-        class ChemistryEffects {
+        // فئة الألعاب النارية
+        class Fireworks {
             constructor() {
                 this.resize();
-                this.particles = [];
+                this.fireworks = [];
                 this.counter = 0;
-
-                // Chemistry element symbols for particle effects
-                this.symbols = ["H", "He", "Li", "C"];
             }
 
             resize() {
@@ -245,48 +284,70 @@
                 let center = this.width / 2;
                 this.spawnA = center - center / 3;
                 this.spawnB = center + center / 3;
+                this.spawnC = this.height * 0.1;
+                this.spawnD = this.height * 0.5;
+            }
+
+            onClick(evt) {
+                let x = evt.clientX || (evt.touches && evt.touches[0].pageX);
+                let y = evt.clientY || (evt.touches && evt.touches[0].pageY);
+                let count = random(3, 6);
+
+                for (let i = 0; i < count; i++) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        x, y,
+                        random(0, 360),
+                        random(30, 90)
+                    ));
+                }
+
+                this.counter = -1;
             }
 
             update(delta) {
                 ctx.globalCompositeOperation = "hard-light";
-                ctx.fillStyle = `rgba(10,10,20,${8 * delta})`;
+                ctx.fillStyle = `rgba(7, 23, 54, ${7 * delta})`;
                 ctx.fillRect(0, 0, this.width, this.height);
 
                 ctx.globalCompositeOperation = "lighter";
-                for (let particle of this.particles) particle.update(delta);
+                for (let firework of this.fireworks) firework.update(delta);
 
-                // Auto-generate particles
-                this.counter += delta * 3;
+                this.counter += delta * 2;
                 if (this.counter >= 1) {
-                    this.particles.push(new Particle(
+                    this.fireworks.push(new Firework(
                         random(this.spawnA, this.spawnB),
                         this.height,
                         random(0, this.width),
-                        random(this.height * 0.1, this.height * 0.6),
+                        random(this.spawnC, this.spawnD),
                         random(0, 360),
-                        random(30, 100),
-                        this.symbols[random(0, this.symbols.length - 1)]
+                        random(30, 90)
                     ));
                     this.counter = 0;
                 }
 
-                this.particles = this.particles.filter(p => !p.dead);
+                this.fireworks = this.fireworks.filter(f => !f.dead);
             }
         }
 
-        class Particle {
-            constructor(x, y, targetX, targetY, shade, offsprings, symbol) {
+        class Firework {
+            constructor(x, y, targetX, targetY, shade, offsprings) {
                 this.dead = false;
                 this.offsprings = offsprings;
                 this.x = x;
                 this.y = y;
                 this.targetX = targetX;
                 this.targetY = targetY;
-                this.shade = shade;
+                // استخدام ألوان متنوعة
+                this.shade = random(1, 6);
+                if (this.shade === 1) this.shade = 45; // ذهبي
+                else if (this.shade === 2) this.shade = 180; // أزرق
+                else if (this.shade === 3) this.shade = 120; // أخضر
+                else if (this.shade === 4) this.shade = 300; // أرجواني
+                else if (this.shade === 5) this.shade = 0; // أحمر
+                else this.shade = 210; // أزرق فاتح
                 this.history = [];
-                this.symbol = symbol;
-                this.size = random(2, 4);
-                this.particleType = random(0, 3); // 0: molecule, 1: element symbol, 2: bubble, 3: atom
             }
 
             update(delta) {
@@ -299,19 +360,21 @@
                     this.x += xDiff * 2 * delta;
                     this.y += yDiff * 2 * delta;
 
-                    this.history.push({ x: this.x, y: this.y });
-                    if (this.history.length > 20) this.history.shift();
+                    this.history.push({
+                        x: this.x,
+                        y: this.y
+                    });
+
+                    if (this.history.length > 12) this.history.shift();
                 } else {
                     if (this.offsprings && !this.madeChilds) {
                         let babies = this.offsprings / 2;
                         for (let i = 0; i < babies; i++) {
-                            let targetX = this.x + this.offsprings * Math.cos((PI2 * i) / babies);
-                            let targetY = this.y + this.offsprings * Math.sin((PI2 * i) / babies);
+                            let targetX = this.x + this.offsprings * Math.cos(PI2 * i / babies);
+                            let targetY = this.y + this.offsprings * Math.sin(PI2 * i / babies);
 
-                            chemistryEffects.particles.push(new Particle(
-                                this.x, this.y, targetX, targetY,
-                                random(this.shade - 20, this.shade + 20),
-                                0, this.symbol
+                            fireworks.fireworks.push(new Firework(
+                                this.x, this.y, targetX, targetY, this.shade, 0
                             ));
                         }
                     }
@@ -323,71 +386,73 @@
                 else if (this.offsprings) {
                     for (let i = 0; i < this.history.length; i++) {
                         let point = this.history[i];
-
-                        // Different particle types for chemistry theme
-                        if (this.particleType === 0) {
-                            // Molecule-like particles
-                            ctx.beginPath();
-                            ctx.fillStyle = `hsl(${this.shade},100%,${i * 5}%)`;
-                            ctx.arc(point.x, point.y, this.size * (1 - i / this.history.length), 0, PI2, false);
-                            ctx.fill();
-
-                            // Connect particles like chemical bonds
-                            if (i > 0) {
-                                let prevPoint = this.history[i - 1];
-                                ctx.beginPath();
-                                ctx.strokeStyle = `hsl(${this.shade},80%,${i * 5}%)`;
-                                ctx.lineWidth = this.size / 2 * (1 - i / this.history.length);
-                                ctx.moveTo(prevPoint.x, prevPoint.y);
-                                ctx.lineTo(point.x, point.y);
-                                ctx.stroke();
-                            }
-                        } else if (this.particleType === 1 && i === 0) {
-                            // Element symbols
-                            ctx.fillStyle = `hsl(${this.shade},100%,80%)`;
-                            ctx.font = `${this.size * 5}px Arial`;
-                            ctx.textAlign = "center";
-                            ctx.textBaseline = "middle";
-                            ctx.fillText(this.symbol, point.x, point.y);
-                        } else if (this.particleType === 2) {
-                            // Bubbling effect
-                            ctx.beginPath();
-                            ctx.strokeStyle = `hsl(${this.shade},90%,${i * 5}%)`;
-                            ctx.lineWidth = 2;
-                            ctx.arc(point.x, point.y, this.size * 2 * (1 - i / this.history.length), 0, PI2, false);
-                            ctx.stroke();
-                        } else {
-                            // Atomic structure
-                            ctx.beginPath();
-                            ctx.fillStyle = `hsl(${this.shade + i * 10},100%,${i * 5 + 50}%)`;
-                            ctx.arc(point.x, point.y, this.size * (1 - i / this.history.length), 0, PI2, false);
-                            ctx.fill();
-                        }
+                        ctx.beginPath();
+                        ctx.fillStyle = `hsl(${this.shade}, 100%, ${i * 5 + 50}%)`; // أكثر سطوعًا
+                        ctx.arc(point.x, point.y, 2, 0, PI2, false);
+                        ctx.fill();
                     }
                 } else {
                     ctx.beginPath();
-                    ctx.fillStyle = `hsl(${this.shade},100%,50%)`;
-                    ctx.arc(this.x, this.y, this.size, 0, PI2, false);
+                    ctx.fillStyle = `hsl(${this.shade}, 100%, 50%)`;
+                    ctx.arc(this.x, this.y, 2, 0, PI2, false);
                     ctx.fill();
                 }
             }
         }
 
-        let canvas = document.getElementById("chemistry");
+        let canvas = document.getElementById("fireworks");
         let ctx = canvas.getContext("2d");
 
         let then = timestamp();
-        let chemistryEffects = new ChemistryEffects();
+        let fireworks = new Fireworks();
 
-        window.onresize = () => chemistryEffects.resize();
+        window.onresize = () => fireworks.resize();
+        document.onclick = evt => fireworks.onClick(evt);
+        document.ontouchstart = evt => fireworks.onClick(evt);
 
+        // إنشاء النجوم
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 250; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+
+            // أحجام مختلفة من النجوم
+            if (i % 10 === 0) {
+                star.classList.add("star-large");
+            } else if (i % 5 === 0) {
+                star.classList.add("star-medium");
+            } else {
+                star.classList.add("star-small");
+            }
+
+            star.style.top = `${random(0, 100)}%`;
+            star.style.left = `${random(0, 100)}%`;
+            star.style.animationDelay = `${random(0, 3000)}ms`;
+            starsContainer.appendChild(star);
+        }
+
+        // حلقة التحديث
         (function loop() {
             requestAnimationFrame(loop);
             let now = timestamp();
             let delta = (now - then) / 1000;
             then = now;
-            chemistryEffects.update(delta);
+            fireworks.update(delta);
         })();
+
+        // إضافة ألعاب نارية تلقائية عند بدء التحميل
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                fireworks.fireworks.push(new Firework(
+                    random(fireworks.spawnA, fireworks.spawnB),
+                    fireworks.height,
+                    random(0, fireworks.width),
+                    random(fireworks.spawnC, fireworks.spawnD),
+                    random(0, 360),
+                    random(30, 90)
+                ));
+            }
+        }, 500);
     </script>
 </body>
 </html>
