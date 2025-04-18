@@ -1,0 +1,393 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Celebration Box 🧪</title>
+
+    <!-- Celebration Styles -->
+    <style>
+        body {
+            margin: 0;
+            background: url('bg12.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: default;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: "Arial", sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            background: url('bg12.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            max-width: 800px;
+            overflow: hidden;
+        }
+
+        h3 {
+            margin: 20px 0;
+            color: #fff;
+            font-weight: 900;
+            font-size: 5vw;
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+            position: relative;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+            h3:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            h3:nth-child(2) {
+                animation-delay: 0.5s;
+            }
+
+            h3:nth-child(3) {
+                animation-delay: 1s;
+            }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.5);
+                transform: scale(1);
+            }
+
+            100% {
+                text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.6);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Bubble effect on hover */
+        h3:hover {
+            animation: bubble 0.5s ease-in-out;
+        }
+
+        @keyframes bubble {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Chemistry Symbols */
+        .chem-symbol {
+            position: absolute;
+            font-weight: bold;
+            z-index: 0;
+            animation: fadeInChem 5s infinite;
+        }
+
+        @keyframes fadeInChem {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            h3 {
+                font-size: 7vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h3 {
+                font-size: 8vw;
+            }
+
+            .text-container {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="chemistry"></canvas>
+
+    <div class="text-container">
+        <!-- Chemistry Symbols -->
+        <!-- Main Text -->
+        <h3 class="animated-text">أبدعت</h3>
+        <h3 class="animated-text">ما شاء الله</h3>
+        <h3 class="animated-text">نحو التفوق الوزاري</h3>
+    </div>
+
+    <script>
+        // Helper functions
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => (Math.random() * (max - min + 1) + min) | 0;
+        const timestamp = () => new Date().getTime();
+
+
+        function createDynamicSymbols() {
+            const container = document.querySelector('.text-container');
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            chemSymbols.forEach(item => {
+                const symbolEl = document.createElement('div');
+                symbolEl.classList.add('chem-symbol');
+                symbolEl.textContent = item.symbol;
+                symbolEl.style.top = `${random(10, containerHeight - 40)}px`;
+                symbolEl.style.left = `${random(10, containerWidth - 80)}px`;
+                symbolEl.style.fontSize = `${random(16, 26)}px`;
+                symbolEl.style.color = item.color;
+                symbolEl.style.animationDuration = `${random(3, 6) + Math.random()}s`;
+                symbolEl.style.animationDelay = `${Math.random() * 3}s`;
+
+                container.appendChild(symbolEl);
+            });
+        }
+
+        // Text effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const texts = document.querySelectorAll('.animated-text');
+
+            // Add click effect on text
+            texts.forEach(text => {
+                text.addEventListener('click', () => {
+                    text.style.animation = 'none';
+                    text.offsetHeight; // Trigger reflow
+                    text.style.animation = 'bubble 0.5s ease-in-out';
+
+                    // Create burst effect
+                    createBurst(text);
+                });
+            });
+
+            // Create dynamic chemistry symbols
+            createDynamicSymbols();
+        });
+
+        function createBurst(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                const particleX = centerX + random(-rect.width / 2, rect.width / 2);
+                const particleY = centerY + random(-rect.height / 2, rect.height / 2);
+
+                // Add to particle system
+                chemistryEffects.particles.push(new Particle(
+                    particleX,
+                    particleY,
+                    particleX + random(-100, 100),
+                    particleY + random(-100, 100),
+                    random(0, 360),
+                    random(10, 30),
+                    chemistryEffects.symbols[random(0, chemistryEffects.symbols.length - 1)]
+                ));
+            }
+        }
+
+        // Chemistry particle system
+        class ChemistryEffects {
+            constructor() {
+                this.resize();
+                this.particles = [];
+                this.counter = 0;
+
+                // Chemistry element symbols for particle effects
+                this.symbols = ["H", "He", "Li", "C"];
+            }
+
+            resize() {
+                this.width = canvas.width = window.innerWidth;
+                this.height = canvas.height = window.innerHeight;
+                let center = this.width / 2;
+                this.spawnA = center - center / 3;
+                this.spawnB = center + center / 3;
+            }
+
+            update(delta) {
+                ctx.globalCompositeOperation = "hard-light";
+                ctx.fillStyle = `rgba(10,10,20,${8 * delta})`;
+                ctx.fillRect(0, 0, this.width, this.height);
+
+                ctx.globalCompositeOperation = "lighter";
+                for (let particle of this.particles) particle.update(delta);
+
+                // Auto-generate particles
+                this.counter += delta * 3;
+                if (this.counter >= 1) {
+                    this.particles.push(new Particle(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        random(0, this.width),
+                        random(this.height * 0.1, this.height * 0.6),
+                        random(0, 360),
+                        random(30, 100),
+                        this.symbols[random(0, this.symbols.length - 1)]
+                    ));
+                    this.counter = 0;
+                }
+
+                this.particles = this.particles.filter(p => !p.dead);
+            }
+        }
+
+        class Particle {
+            constructor(x, y, targetX, targetY, shade, offsprings, symbol) {
+                this.dead = false;
+                this.offsprings = offsprings;
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.shade = shade;
+                this.history = [];
+                this.symbol = symbol;
+                this.size = random(2, 4);
+                this.particleType = random(0, 3); // 0: molecule, 1: element symbol, 2: bubble, 3: atom
+            }
+
+            update(delta) {
+                if (this.dead) return;
+
+                let xDiff = this.targetX - this.x;
+                let yDiff = this.targetY - this.y;
+
+                if (Math.abs(xDiff) > 3 || Math.abs(yDiff) > 3) {
+                    this.x += xDiff * 2 * delta;
+                    this.y += yDiff * 2 * delta;
+
+                    this.history.push({ x: this.x, y: this.y });
+                    if (this.history.length > 20) this.history.shift();
+                } else {
+                    if (this.offsprings && !this.madeChilds) {
+                        let babies = this.offsprings / 2;
+                        for (let i = 0; i < babies; i++) {
+                            let targetX = this.x + this.offsprings * Math.cos((PI2 * i) / babies);
+                            let targetY = this.y + this.offsprings * Math.sin((PI2 * i) / babies);
+
+                            chemistryEffects.particles.push(new Particle(
+                                this.x, this.y, targetX, targetY,
+                                random(this.shade - 20, this.shade + 20),
+                                0, this.symbol
+                            ));
+                        }
+                    }
+                    this.madeChilds = true;
+                    this.history.shift();
+                }
+
+                if (this.history.length === 0) this.dead = true;
+                else if (this.offsprings) {
+                    for (let i = 0; i < this.history.length; i++) {
+                        let point = this.history[i];
+
+                        // Different particle types for chemistry theme
+                        if (this.particleType === 0) {
+                            // Molecule-like particles
+                            ctx.beginPath();
+                            ctx.fillStyle = `hsl(${this.shade},100%,${i * 5}%)`;
+                            ctx.arc(point.x, point.y, this.size * (1 - i / this.history.length), 0, PI2, false);
+                            ctx.fill();
+
+                            // Connect particles like chemical bonds
+                            if (i > 0) {
+                                let prevPoint = this.history[i - 1];
+                                ctx.beginPath();
+                                ctx.strokeStyle = `hsl(${this.shade},80%,${i * 5}%)`;
+                                ctx.lineWidth = this.size / 2 * (1 - i / this.history.length);
+                                ctx.moveTo(prevPoint.x, prevPoint.y);
+                                ctx.lineTo(point.x, point.y);
+                                ctx.stroke();
+                            }
+                        } else if (this.particleType === 1 && i === 0) {
+                            // Element symbols
+                            ctx.fillStyle = `hsl(${this.shade},100%,80%)`;
+                            ctx.font = `${this.size * 5}px Arial`;
+                            ctx.textAlign = "center";
+                            ctx.textBaseline = "middle";
+                            ctx.fillText(this.symbol, point.x, point.y);
+                        } else if (this.particleType === 2) {
+                            // Bubbling effect
+                            ctx.beginPath();
+                            ctx.strokeStyle = `hsl(${this.shade},90%,${i * 5}%)`;
+                            ctx.lineWidth = 2;
+                            ctx.arc(point.x, point.y, this.size * 2 * (1 - i / this.history.length), 0, PI2, false);
+                            ctx.stroke();
+                        } else {
+                            // Atomic structure
+                            ctx.beginPath();
+                            ctx.fillStyle = `hsl(${this.shade + i * 10},100%,${i * 5 + 50}%)`;
+                            ctx.arc(point.x, point.y, this.size * (1 - i / this.history.length), 0, PI2, false);
+                            ctx.fill();
+                        }
+                    }
+                } else {
+                    ctx.beginPath();
+                    ctx.fillStyle = `hsl(${this.shade},100%,50%)`;
+                    ctx.arc(this.x, this.y, this.size, 0, PI2, false);
+                    ctx.fill();
+                }
+            }
+        }
+
+        let canvas = document.getElementById("chemistry");
+        let ctx = canvas.getContext("2d");
+
+        let then = timestamp();
+        let chemistryEffects = new ChemistryEffects();
+
+        window.onresize = () => chemistryEffects.resize();
+
+        (function loop() {
+            requestAnimationFrame(loop);
+            let now = timestamp();
+            let delta = (now - then) / 1000;
+            then = now;
+            chemistryEffects.update(delta);
+        })();
+    </script>
+</body>
+</html>
