@@ -1,0 +1,869 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع النصيحة 🌟</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #071736; /* خلفية زرقاء داكنة للسماء الليلية */
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* الألعاب النارية في الخلفية */
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 1; /* النص فوق الألعاب النارية */
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #fff;
+            font-weight: 900;
+            font-size: 5vw;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        h2 {
+            margin: 10px 0;
+            color: #f8f8f8;
+            font-weight: 700;
+            font-size: 3.5vw;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        /* النص الرئيسي */
+        .main-text-container {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+        }
+
+        .main-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            color: #fff;
+        }
+
+            .main-text span {
+                font-size: 3em;
+                font-weight: bold;
+                color: #ffd700;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            }
+
+        /* النجوم */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star-medium {
+            width: 3px;
+            height: 3px;
+        }
+
+        .star-large {
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        /* الرمز الكيميائي */
+        .chemical-symbol {
+            position: absolute;
+            bottom: 15%;
+            left: 15%;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 40, 80, 0.6);
+            border-radius: 50%;
+            border: 3px solid rgba(0, 200, 255, 0.7);
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.7);
+            animation: glow 4s infinite alternate;
+        }
+
+        .chemical-symbol-inner {
+            font-size: 60px;
+            font-weight: bold;
+            color: #00eeff;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+
+        .chemical-symbol-subscript {
+            font-size: 30px;
+            position: relative;
+            bottom: -15px;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+                border-color: rgba(0, 200, 255, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+                border-color: rgba(100, 230, 255, 0.9);
+            }
+        }
+
+        /* تأثيرات إضافية للكيمياء */
+        .molecule {
+            position: absolute;
+            z-index: 1;
+            width: 200px;
+            height: 200px;
+            opacity: 0.7;
+        }
+
+        .molecule-1 {
+            top: 15%;
+            left: 15%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .molecule-2 {
+            bottom: 15%;
+            right: 15%;
+            animation: float 18s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            75% {
+                transform: translateY(20px) rotate(-5deg);
+            }
+        }
+
+        /* تأثير جزيئات الكيمياء المتحركة */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: rise 15s infinite linear;
+        }
+
+        .particle-o {
+            background: #ff3300;
+            box-shadow: 0 0 10px #ff3300;
+        }
+
+        .particle-h {
+            background: #33ccff;
+            box-shadow: 0 0 8px #33ccff;
+        }
+
+        .particle-n {
+            background: #9966ff;
+            box-shadow: 0 0 8px #9966ff;
+        }
+
+        .periodic-table {
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            width: 100px;
+            height: 100px;
+            background: rgba(10, 40, 80, 0.6);
+            border: 2px solid #00eeff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 4s infinite alternate;
+            z-index: 1;
+        }
+
+        .element-symbol {
+            color: #00eeff;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 200, 255, 0.9);
+        }
+
+        .element-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .element-name {
+            color: #fff;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .element-weight {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+            }
+
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(0, 200, 255, 0.9);
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-100px) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+
+        /* رسم الروابط الكيميائية */
+        .chemical-bonds {
+            position: absolute;
+            bottom: 30%;
+            right: 10%;
+            width: 140px;
+            height: 140px;
+            z-index: 1;
+        }
+
+        .bond {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            transform-origin: center;
+        }
+
+        .atom {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* الأنماط للأجهزة المحمولة */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 8vw;
+            }
+
+            h2 {
+                font-size: 6vw;
+            }
+
+            .main-text span {
+                font-size: 2.2em;
+            }
+
+            .chemical-symbol {
+                bottom: 20%;
+                left: 10%;
+                width: 90px;
+                height: 90px;
+            }
+
+            .chemical-symbol-inner {
+                font-size: 45px;
+            }
+
+            .chemical-symbol-subscript {
+                font-size: 22px;
+                bottom: -10px;
+            }
+
+            .molecule {
+                width: 120px;
+                height: 120px;
+            }
+
+            .periodic-table {
+                width: 80px;
+                height: 80px;
+            }
+
+            .element-symbol {
+                font-size: 26px;
+            }
+
+            .chemical-bonds {
+                width: 100px;
+                height: 100px;
+            }
+
+            .atom {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 10vw;
+            }
+
+            h2 {
+                font-size: 7vw;
+            }
+
+            .main-text span {
+                font-size: 1.8em;
+            }
+
+            .main-text-container {
+                top: 5%;
+                right: 5%;
+            }
+
+            .chemical-symbol {
+                width: 70px;
+                height: 70px;
+            }
+
+            .chemical-symbol-inner {
+                font-size: 35px;
+            }
+
+            .chemical-symbol-subscript {
+                font-size: 18px;
+                bottom: -8px;
+            }
+
+            .molecule {
+                width: 80px;
+                height: 80px;
+            }
+
+            .periodic-table {
+                width: 60px;
+                height: 60px;
+                top: 10%;
+                left: 2%;
+            }
+
+            .element-symbol {
+                font-size: 20px;
+            }
+
+            .chemical-bonds {
+                width: 80px;
+                height: 80px;
+                bottom: 25%;
+                right: 5%;
+            }
+
+            .atom {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+        }
+
+        /* أنبوب الاختبار المتحرك */
+        .test-tube {
+            position: absolute;
+            right: 10%;
+            bottom: 15%;
+            width: 30px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 0 0 15px 15px;
+            z-index: 1;
+            overflow: hidden;
+            transform: rotate(-10deg);
+        }
+
+        .test-tube-liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to bottom, #ff00ff, #9900ff);
+            animation: bubble 3s infinite ease-in-out;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: rise-bubble 2s infinite linear;
+        }
+
+        @keyframes bubble {
+            0%, 100% {
+                height: 70%;
+            }
+
+            50% {
+                height: 72%;
+            }
+        }
+
+        @keyframes rise-bubble {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(var(--tx), calc(-1 * var(--ty)));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworks"></canvas>
+
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+
+    <!-- المسجد في الخلفية -->
+    <div class="mosque"></div>
+
+    <div class="text-container">
+        <h1>أبدعت ما شاء الله</h1>
+        <h2>نحو التفوق الوزاري</h2>
+    </div>
+
+    <!-- النص الرئيسي -->
+    <div class="main-text-container">
+        <div class="main-text">
+            <span>موقع النصيحة التعليمي</span>
+        </div>
+    </div>
+
+    <!-- الرمز الكيميائي -->
+    <div class="chemical-symbol">
+        <div class="chemical-symbol-inner" style="color:red;">
+            200/200
+        </div>
+    </div>
+
+    <!-- جزيئات الكيمياء المتحركة -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- الجدول الدوري -->
+    <div class="periodic-table">
+        <div class="element-number">29</div>
+        <div class="element-symbol">Cu</div>
+        <div class="element-name">نحاس</div>
+        <div class="element-weight">63.55</div>
+    </div>
+
+    <!-- أنبوب اختبار متحرك -->
+    <div class="test-tube">
+        <div class="test-tube-liquid" id="test-tube-liquid"></div>
+    </div>
+
+    <!-- الروابط الكيميائية -->
+    <div class="chemical-bonds" id="chemical-bonds">
+        <!-- سيتم إنشاؤها عن طريق جافا سكريبت -->
+    </div>
+
+    <script>
+        // دوال مساعدة
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+        const timestamp = () => new Date().getTime();
+
+        // فئة الألعاب النارية
+        class Fireworks {
+            constructor() {
+                this.resize();
+                this.fireworks = [];
+                this.counter = 0;
+            }
+
+            resize() {
+                this.width = canvas.width = window.innerWidth;
+                this.height = canvas.height = window.innerHeight;
+                let center = this.width / 2;
+                this.spawnA = center - center / 3;
+                this.spawnB = center + center / 3;
+                this.spawnC = this.height * 0.1;
+                this.spawnD = this.height * 0.5;
+            }
+
+            onClick(evt) {
+                let x = evt.clientX || (evt.touches && evt.touches[0].pageX);
+                let y = evt.clientY || (evt.touches && evt.touches[0].pageY);
+                let count = random(3, 6);
+
+                for (let i = 0; i < count; i++) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        x, y,
+                        random(0, 360),
+                        random(30, 90)
+                    ));
+                }
+
+                this.counter = -1;
+            }
+
+            update(delta) {
+                ctx.globalCompositeOperation = "hard-light";
+                ctx.fillStyle = `rgba(7, 23, 54, ${7 * delta})`;
+                ctx.fillRect(0, 0, this.width, this.height);
+
+                ctx.globalCompositeOperation = "lighter";
+                for (let firework of this.fireworks) firework.update(delta);
+
+                this.counter += delta * 2;
+                if (this.counter >= 1) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        random(0, this.width),
+                        random(this.spawnC, this.spawnD),
+                        random(0, 360),
+                        random(30, 90)
+                    ));
+                    this.counter = 0;
+                }
+
+                this.fireworks = this.fireworks.filter(f => !f.dead);
+            }
+        }
+
+        class Firework {
+            constructor(x, y, targetX, targetY, shade, offsprings) {
+                this.dead = false;
+                this.offsprings = offsprings;
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                // استخدام ألوان متنوعة
+                this.shade = random(1, 6);
+                if (this.shade === 1) this.shade = 45; // ذهبي
+                else if (this.shade === 2) this.shade = 180; // أزرق
+                else if (this.shade === 3) this.shade = 120; // أخضر
+                else if (this.shade === 4) this.shade = 300; // أرجواني
+                else if (this.shade === 5) this.shade = 0; // أحمر
+                else this.shade = 210; // أزرق فاتح
+                this.history = [];
+            }
+
+            update(delta) {
+                if (this.dead) return;
+
+                let xDiff = this.targetX - this.x;
+                let yDiff = this.targetY - this.y;
+
+                if (Math.abs(xDiff) > 3 || Math.abs(yDiff) > 3) {
+                    this.x += xDiff * 2 * delta;
+                    this.y += yDiff * 2 * delta;
+
+                    this.history.push({
+                        x: this.x,
+                        y: this.y
+                    });
+
+                    if (this.history.length > 12) this.history.shift();
+                } else {
+                    if (this.offsprings && !this.madeChilds) {
+                        let babies = this.offsprings / 2;
+                        for (let i = 0; i < babies; i++) {
+                            let targetX = this.x + this.offsprings * Math.cos(PI2 * i / babies);
+                            let targetY = this.y + this.offsprings * Math.sin(PI2 * i / babies);
+
+                            fireworks.fireworks.push(new Firework(
+                                this.x, this.y, targetX, targetY, this.shade, 0
+                            ));
+                        }
+                    }
+                    this.madeChilds = true;
+                    this.history.shift();
+                }
+
+                if (this.history.length === 0) this.dead = true;
+                else if (this.offsprings) {
+                    for (let i = 0; i < this.history.length; i++) {
+                        let point = this.history[i];
+                        ctx.beginPath();
+                        ctx.fillStyle = `hsl(${this.shade}, 100%, ${i * 5 + 50}%)`; // أكثر سطوعًا
+                        ctx.arc(point.x, point.y, 2, 0, PI2, false);
+                        ctx.fill();
+                    }
+                } else {
+                    ctx.beginPath();
+                    ctx.fillStyle = `hsl(${this.shade}, 100%, 50%)`;
+                    ctx.arc(this.x, this.y, 2, 0, PI2, false);
+                    ctx.fill();
+                }
+            }
+        }
+
+        let canvas = document.getElementById("fireworks");
+        let ctx = canvas.getContext("2d");
+
+        let then = timestamp();
+        let fireworks = new Fireworks();
+
+        window.onresize = () => fireworks.resize();
+        document.onclick = evt => fireworks.onClick(evt);
+        document.ontouchstart = evt => fireworks.onClick(evt);
+
+        // إنشاء النجوم
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 250; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+
+            // أحجام مختلفة من النجوم
+            if (i % 10 === 0) {
+                star.classList.add("star-large");
+            } else if (i % 5 === 0) {
+                star.classList.add("star-medium");
+            } else {
+                star.classList.add("star-small");
+            }
+
+            star.style.top = `${random(0, 100)}%`;
+            star.style.left = `${random(0, 100)}%`;
+            star.style.animationDelay = `${random(0, 3000)}ms`;
+            starsContainer.appendChild(star);
+        }
+
+        // إنشاء جزيئات الكيمياء
+        const particlesContainer = document.getElementById("particles");
+        const particleTypes = ['o', 'h', 'n'];
+        const particleSizes = [6, 4, 5];
+
+        for (let i = 0; i < 30; i++) {
+            let typeIndex = i % 3;
+            let particle = document.createElement("div");
+            particle.classList.add("particle", `particle-${particleTypes[typeIndex]}`);
+
+            // حجم وموقع عشوائي
+            let size = particleSizes[typeIndex] + random(-1, 2);
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${random(10, 90)}%`;
+            particle.style.bottom = `-${random(10, 30)}px`;
+
+            // سرعة وحركة عشوائية
+            let duration = random(10, 25);
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.setProperty('--tx', `${random(-100, 100)}px`);
+
+            particlesContainer.appendChild(particle);
+        }
+
+        // إنشاء الروابط الكيميائية - تمثيل جزيء الماء
+        const chemicalBonds = document.getElementById("chemical-bonds");
+
+        // إنشاء الذرات
+        const atomsData = [
+            { symbol: 'O', color: '#ff3300', x: 70, y: 70 },
+            { symbol: 'H', color: '#33ccff', x: 40, y: 40 },
+            { symbol: 'H', color: '#33ccff', x: 100, y: 40 }
+        ];
+
+        atomsData.forEach(atom => {
+            let atomEl = document.createElement("div");
+            atomEl.classList.add("atom");
+            atomEl.style.left = `${atom.x - 15}px`;
+            atomEl.style.top = `${atom.y - 15}px`;
+            atomEl.style.background = atom.color;
+            atomEl.textContent = atom.symbol;
+            chemicalBonds.appendChild(atomEl);
+        });
+
+        // إنشاء الروابط
+        const bondsData = [
+            { x1: 70, y1: 70, x2: 40, y2: 40 },
+            { x1: 70, y1: 70, x2: 100, y2: 40 }
+        ];
+
+        bondsData.forEach(bond => {
+            let bondEl = document.createElement("div");
+            bondEl.classList.add("bond");
+
+            // حساب طول واتجاه الرابطة
+            let dx = bond.x2 - bond.x1;
+            let dy = bond.y2 - bond.y1;
+            let length = Math.sqrt(dx * dx + dy * dy);
+            let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+            bondEl.style.width = `${length}px`;
+            bondEl.style.height = '4px';
+            bondEl.style.left = `${bond.x1}px`;
+            bondEl.style.top = `${bond.y1}px`;
+            bondEl.style.transformOrigin = '0 0';
+            bondEl.style.transform = `rotate(${angle}deg)`;
+
+            chemicalBonds.appendChild(bondEl);
+        });
+
+        // إنشاء فقاعات في أنبوب الاختبار
+        const testTubeLiquid = document.getElementById("test-tube-liquid");
+        for (let i = 0; i < 10; i++) {
+            let bubble = document.createElement("div");
+            bubble.classList.add("bubble");
+
+            let size = random(2, 6);
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${random(20, 80)}%`;
+            bubble.style.bottom = `${random(10, 90)}%`;
+
+            let duration = random(1, 3);
+            bubble.style.animationDuration = `${duration}s`;
+            bubble.style.animationDelay = `${random(0, 2000)}ms`;
+            bubble.style.setProperty('--tx', `${random(-5, 5)}px`);
+            bubble.style.setProperty('--ty', `${random(20, 40)}px`);
+
+            testTubeLiquid.appendChild(bubble);
+        }
+
+        // حلقة التحديث
+        (function loop() {
+            requestAnimationFrame(loop);
+            let now = timestamp();
+            let delta = (now - then) / 1000;
+            then = now;
+            fireworks.update(delta);
+        })();
+
+        // إضافة ألعاب نارية تلقائية عند بدء التحميل
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                fireworks.fireworks.push(new Firework(
+                    random(fireworks.spawnA, fireworks.spawnB),
+                    fireworks.height,
+                    random(0, fireworks.width),
+                    random(fireworks.spawnC, fireworks.spawnD),
+                    random(0, 360),
+                    random(30, 90)
+                ));
+            }
+        }, 500);
+
+        // إضافة تغير عشوائي للعناصر الكيميائية
+        const elements = [
+            { number: 29, symbol: "Cu", name: "نحاس", weight: "63.55" },
+            { number: 79, symbol: "Au", name: "ذهب", weight: "196.97" },
+            { number: 13, symbol: "Al", name: "ألمنيوم", weight: "26.98" },
+            { number: 8, symbol: "O", name: "أكسجين", weight: "16.00" },
+            { number: 1, symbol: "H", name: "هيدروجين", weight: "1.01" },
+            { number: 6, symbol: "C", name: "كربون", weight: "12.01" }
+        ];
+
+        const elementSymbol = document.querySelector('.element-symbol');
+        const elementNumber = document.querySelector('.element-number');
+        const elementName = document.querySelector('.element-name');
+        const elementWeight = document.querySelector('.element-weight');
+
+        setInterval(() => {
+            const randomElement = elements[Math.floor(Math.random() * elements.length)];
+            elementSymbol.textContent = randomElement.symbol;
+            elementNumber.textContent = randomElement.number;
+            elementName.textContent = randomElement.name;
+            elementWeight.textContent = randomElement.weight;
+        }, 5000);
+    </script>
+</body>
+</html>
