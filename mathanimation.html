@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع النصيحة 🌟</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #071736; /* خلفية زرقاء داكنة للسماء الليلية */
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* الألعاب النارية في الخلفية */
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 1; /* النص فوق الألعاب النارية */
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #fff;
+            font-weight: 900;
+            font-size: 5vw;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        h2 {
+            margin: 10px 0;
+            color: #f8f8f8;
+            font-weight: 700;
+            font-size: 3.5vw;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        /* النص الرئيسي */
+        .main-text-container {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+        }
+
+        .main-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            color: #fff;
+        }
+
+            .main-text span {
+                font-size: 3em;
+                font-weight: bold;
+                color: #ffd700;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            }
+
+        /* النجوم */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star-medium {
+            width: 3px;
+            height: 3px;
+        }
+
+        .star-large {
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        /* الرمز الرياضي */
+        .math-symbol {
+            position: absolute;
+            bottom: 15%;
+            left: 15%;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 40, 80, 0.6);
+            border-radius: 50%;
+            border: 3px solid rgba(0, 200, 255, 0.7);
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.7);
+            animation: glow 4s infinite alternate;
+        }
+
+        .math-symbol-inner {
+            font-size: 45px;
+            font-weight: bold;
+            color: #00eeff;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+                border-color: rgba(0, 200, 255, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+                border-color: rgba(100, 230, 255, 0.9);
+            }
+        }
+
+        /* تأثيرات إضافية للرياضيات */
+        .geometric-shape {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.7;
+            border: 2px solid #00eeff;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.7);
+        }
+
+        .shape-1 {
+            top: 15%;
+            left: 15%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            bottom: 15%;
+            right: 15%;
+            animation: float 18s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            75% {
+                transform: translateY(20px) rotate(-5deg);
+            }
+        }
+
+        /* تأثير جزيئات الرياضيات المتحركة */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: rise 15s infinite linear;
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            color: white;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        .particle-pi {
+            color: #ff3300;
+        }
+
+        .particle-sigma {
+            color: #33ccff;
+        }
+
+        .particle-theta {
+            color: #9966ff;
+        }
+
+        .particle-phi {
+            color: #00ff66;
+        }
+
+        .particle-delta {
+            color: #ffcc00;
+        }
+
+        .formula-display {
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            width: 150px;
+            height: 80px;
+            background: rgba(10, 40, 80, 0.6);
+            border: 2px solid #00eeff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 4s infinite alternate;
+            z-index: 1;
+            color: #00eeff;
+            font-family: 'Times New Roman', serif;
+            font-size: 22px;
+            text-shadow: 0 0 8px rgba(0, 200, 255, 0.9);
+            padding: 10px;
+        }
+
+        .formula-name {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+            }
+
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(0, 200, 255, 0.9);
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-100px) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+
+        /* رسم الأشكال الهندسية */
+        .geometric-container {
+            position: absolute;
+            bottom: 30%;
+            right: 10%;
+            width: 140px;
+            height: 140px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coordinate-system {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .axis {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            transform-origin: center;
+        }
+
+        .x-axis {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+        }
+
+        .y-axis {
+            width: 2px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+        }
+
+        .plot-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: -4px;
+            margin-top: -4px;
+            background: #00eeff;
+            box-shadow: 0 0 8px rgba(0, 200, 255, 0.9);
+        }
+
+        /* الآلة الحاسبة المتحركة */
+        .calculator {
+            position: absolute;
+            right: 10%;
+            bottom: 15%;
+            width: 80px;
+            height: 120px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calculator-screen {
+            height: 30px;
+            background: rgba(100, 255, 150, 0.3);
+            margin: 5px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: #00ff66;
+            font-family: 'Courier New', monospace;
+            padding-right: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            padding: 5px;
+            flex: 1;
+        }
+
+        .calc-button {
+            background: rgba(60, 80, 120, 0.8);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .calc-button-op {
+            background: rgba(100, 100, 160, 0.8);
+        }
+
+        .calc-button-eq {
+            background: rgba(100, 160, 100, 0.8);
+        }
+
+        /* الأنماط للأجهزة المحمولة */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 8vw;
+            }
+
+            h2 {
+                font-size: 6vw;
+            }
+
+            .main-text span {
+                font-size: 2.2em;
+            }
+
+            .math-symbol {
+                bottom: 20%;
+                left: 10%;
+                width: 90px;
+                height: 90px;
+            }
+
+            .math-symbol-inner {
+                font-size: 35px;
+            }
+
+            .geometric-shape {
+                width: 120px;
+                height: 120px;
+            }
+
+            .formula-display {
+                width: 130px;
+                height: 70px;
+                font-size: 20px;
+            }
+
+            .geometric-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .calculator {
+                width: 70px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 10vw;
+            }
+
+            h2 {
+                font-size: 7vw;
+            }
+
+            .main-text span {
+                font-size: 1.8em;
+            }
+
+            .main-text-container {
+                top: 5%;
+                right: 5%;
+            }
+
+            .math-symbol {
+                width: 70px;
+                height: 70px;
+            }
+
+            .math-symbol-inner {
+                font-size: 30px;
+            }
+
+            .geometric-shape {
+                width: 80px;
+                height: 80px;
+            }
+
+            .formula-display {
+                width: 100px;
+                height: 60px;
+                font-size: 16px;
+                top: 10%;
+                left: 2%;
+            }
+
+            .geometric-container {
+                width: 80px;
+                height: 80px;
+                bottom: 25%;
+                right: 5%;
+            }
+
+            .calculator {
+                width: 60px;
+                height: 90px;
+            }
+        }
+
+        /* Triangle shape */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 86px solid rgba(255, 204, 0, 0.3);
+            position: absolute;
+            top: 30%;
+            right: 25%;
+            animation: rotate 10s infinite linear;
+        }
+
+        /* Circle shape */
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 204, 255, 0.5);
+            background: rgba(0, 204, 255, 0.2);
+            position: absolute;
+            bottom: 40%;
+            left: 30%;
+            animation: pulse 7s infinite alternate;
+        }
+
+        /* Pentagon shape */
+        .pentagon {
+            width: 60px;
+            height: 60px;
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            background: rgba(255, 102, 204, 0.3);
+            border: 2px solid rgba(255, 102, 204, 0.5);
+            animation: rotate 12s infinite linear reverse;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworks"></canvas>
+
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+
+    <!-- المسجد في الخلفية -->
+    <div class="mosque"></div>
+
+    <div class="text-container">
+        <h1>أبدعت ما شاء الله</h1>
+        <h2>نحو التفوق الوزاري</h2>
+    </div>
+
+    <!-- النص الرئيسي -->
+    <div class="main-text-container">
+        <div class="main-text">
+            <span>موقع النصيحة التعليمي</span>
+        </div>
+    </div>
+
+    <!-- الرمز الرياضي -->
+    <div class="math-symbol">
+        <div class="math-symbol-inner" style="color:red;">
+            200/200
+        </div>
+    </div>
+
+    <!-- جزيئات الرياضيات المتحركة -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- عرض المعادلات الرياضية -->
+    <div class="formula-display">
+        <div id="formula-content">E = mc²</div>
+        <div class="formula-name">نظرية النسبية</div>
+    </div>
+
+    <!-- الآلة الحاسبة المتحركة -->
+    <div class="calculator">
+        <div class="calculator-screen" id="calculator-screen">123.45</div>
+        <div class="calculator-buttons">
+            <div class="calc-button">7</div>
+            <div class="calc-button">8</div>
+            <div class="calc-button">9</div>
+            <div class="calc-button calc-button-op">÷</div>
+            <div class="calc-button">4</div>
+            <div class="calc-button">5</div>
+            <div class="calc-button">6</div>
+            <div class="calc-button calc-button-op">×</div>
+            <div class="calc-button">1</div>
+            <div class="calc-button">2</div>
+            <div class="calc-button">3</div>
+            <div class="calc-button calc-button-op">-</div>
+            <div class="calc-button">0</div>
+            <div class="calc-button">.</div>
+            <div class="calc-button calc-button-eq">=</div>
+            <div class="calc-button calc-button-op">+</div>
+        </div>
+    </div>
+
+    <!-- الرسم البياني -->
+    <div class="geometric-container">
+        <div class="coordinate-system" id="coordinate-system">
+            <div class="axis x-axis"></div>
+            <div class="axis y-axis"></div>
+            <!-- النقاط ستضاف بالجافاسكريبت -->
+        </div>
+    </div>
+    
+    <!-- الأشكال الهندسية -->
+    <div class="triangle"></div>
+    <div class="circle"></div>
+    <div class="pentagon"></div>
+
+    <script>
+        // دوال مساعدة
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+        const timestamp = () => new Date().getTime();
+
+        // فئة الألعاب النارية
+        class Fireworks {
+            constructor() {
+                this.resize();
+                this.fireworks = [];
+                this.counter = 0;
+            }
+
+            resize() {
+                this.width = canvas.width = window.innerWidth;
+                this.height = canvas.height = window.innerHeight;
+                let center = this.width / 2;
+                this.spawnA = center - center / 3;
+                this.spawnB = center + center / 3;
+                this.spawnC = this.height * 0.1;
+                this.spawnD = this.height * 0.5;
+            }
+
+            onClick(evt) {
+                let x = evt.clientX || (evt.touches && evt.touches[0].pageX);
+                let y = evt.clientY || (evt.touches && evt.touches[0].pageY);
+                let count = random(3, 6);
+
+                for (let i = 0; i < count; i++) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        x, y,
+                        random(0, 360),
+                        random(30, 90)
+                    ));
+                }
+
+                this.counter = -1;
+            }
+
+            update(delta) {
+                ctx.globalCompositeOperation = "hard-light";
+                ctx.fillStyle = `rgba(7, 23, 54, ${7 * delta})`;
+                ctx.fillRect(0, 0, this.width, this.height);
+
+                ctx.globalCompositeOperation = "lighter";
+                for (let firework of this.fireworks) firework.update(delta);
+
+                this.counter += delta * 2;
+                if (this.counter >= 1) {
+                    this.fireworks.push(new Firework(
+                        random(this.spawnA, this.spawnB),
+                        this.height,
+                        random(0, this.width),
+                        random(this.spawnC, this.spawnD),
+                        random(0, 360),
+                        random(30, 90)
+                    ));
+                    this.counter = 0;
+                }
+
+                this.fireworks = this.fireworks.filter(f => !f.dead);
+            }
+        }
+
+        class Firework {
+            constructor(x, y, targetX, targetY, shade, offsprings) {
+                this.dead = false;
+                this.offsprings = offsprings;
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                // استخدام ألوان متنوعة
+                this.shade = random(1, 6);
+                if (this.shade === 1) this.shade = 45; // ذهبي
+                else if (this.shade === 2) this.shade = 180; // أزرق
+                else if (this.shade === 3) this.shade = 120; // أخضر
+                else if (this.shade === 4) this.shade = 300; // أرجواني
+                else if (this.shade === 5) this.shade = 0; // أحمر
+                else this.shade = 210; // أزرق فاتح
+                this.history = [];
+            }
+
+            update(delta) {
+                if (this.dead) return;
+
+                let xDiff = this.targetX - this.x;
+                let yDiff = this.targetY - this.y;
+
+                if (Math.abs(xDiff) > 3 || Math.abs(yDiff) > 3) {
+                    this.x += xDiff * 2 * delta;
+                    this.y += yDiff * 2 * delta;
+
+                    this.history.push({
+                        x: this.x,
+                        y: this.y
+                    });
+
+                    if (this.history.length > 12) this.history.shift();
+                } else {
+                    if (this.offsprings && !this.madeChilds) {
+                        let babies = this.offsprings / 2;
+                        for (let i = 0; i < babies; i++) {
+                            let targetX = this.x + this.offsprings * Math.cos(PI2 * i / babies);
+                            let targetY = this.y + this.offsprings * Math.sin(PI2 * i / babies);
+
+                            fireworks.fireworks.push(new Firework(
+                                this.x, this.y, targetX, targetY, this.shade, 0
+                            ));
+                        }
+                    }
+                    this.madeChilds = true;
+                    this.history.shift();
+                }
+
+                if (this.history.length === 0) this.dead = true;
+                else if (this.offsprings) {
+                    for (let i = 0; i < this.history.length; i++) {
+                        let point = this.history[i];
+                        ctx.beginPath();
+                        ctx.fillStyle = `hsl(${this.shade}, 100%, ${i * 5 + 50}%)`; // أكثر سطوعًا
+                        ctx.arc(point.x, point.y, 2, 0, PI2, false);
+                        ctx.fill();
+                    }
+                } else {
+                    ctx.beginPath();
+                    ctx.fillStyle = `hsl(${this.shade}, 100%, 50%)`;
+                    ctx.arc(this.x, this.y, 2, 0, PI2, false);
+                    ctx.fill();
+                }
+            }
+        }
+
+        let canvas = document.getElementById("fireworks");
+        let ctx = canvas.getContext("2d");
+
+        let then = timestamp();
+        let fireworks = new Fireworks();
+
+        window.onresize = () => fireworks.resize();
+        document.onclick = evt => fireworks.onClick(evt);
+        document.ontouchstart = evt => fireworks.onClick(evt);
+
+        // إنشاء النجوم
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 250; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+
+            // أحجام مختلفة من النجوم
+            if (i % 10 === 0) {
+                star.classList.add("star-large");
+            } else if (i % 5 === 0) {
+                star.classList.add("star-medium");
+            } else {
+                star.classList.add("star-small");
+            }
+
+            star.style.top = `${random(0, 100)}%`;
+            star.style.left = `${random(0, 100)}%`;
+            star.style.animationDelay = `${random(0, 3000)}ms`;
+            starsContainer.appendChild(star);
+        }
+
+        // إنشاء جزيئات الرياضيات
+        const particlesContainer = document.getElementById("particles");
+        const particleSymbols = ['π', 'Σ', 'θ', 'φ', 'Δ'];
+        const particleClasses = ['particle-pi', 'particle-sigma', 'particle-theta', 'particle-phi', 'particle-delta'];
+
+        for (let i = 0; i < 30; i++) {
+            let typeIndex = i % 5;
+            let particle = document.createElement("div");
+            particle.classList.add("particle", particleClasses[typeIndex]);
+            particle.textContent = particleSymbols[typeIndex];
+
+            // موقع عشوائي
+            particle.style.fontSize = `${random(16, 24)}px`;
+            particle.style.left = `${random(10, 90)}%`;
+            particle.style.bottom = `-${random(10, 30)}px`;
+
+            // سرعة وحركة عشوائية
+            let duration = random(10, 25);
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.setProperty('--tx', `${random(-100, 100)}px`);
+
+            particlesContainer.appendChild(particle);
+        }
+
+        // إنشاء نقاط في الرسم البياني
+        const coordinateSystem = document.getElementById("coordinate-system");
+        // إنشاء منحنى سينوسي
+        for (let i = 0; i < 10; i++) {
+            let point = document.createElement("div");
+            point.classList.add("plot-point");
+            
+            // حساب موقع نقطة على منحنى سينوسي
+            let x = 10 + i * 12; // محور السينات
+            let y = 70 - 30 * Math.sin(i * 0.6); // محور العينات مع دالة الجيب
+            
+            point.style.left = `${x}px`;
+            point.style.top = `${y}px`;
+            
+            coordinateSystem.appendChild(point);
+        }
+
+    // تغيير المعادلات الرياضية بشكل دوري
+    const formulas = [
+        { formula: "a² + b² = c²", name: "نظرية فيثاغورس" },
+        { formula: "sin²θ + cos²θ = 1", name: "المتطابقة الأساسية" },
+        { formula: "1 + tan²θ = sec²θ", name: "علاقة الظل والقاطع" },
+        { formula: "1 + cot²θ = csc²θ", name: "علاقة الظل التمام والقاطع التمام" },
+        { formula: "sin(2θ) = 2sinθcosθ", name: "متطابقة الزاويتين (جيب)" },
+        { formula: "cos(2θ) = cos²θ - sin²θ", name: "متطابقة الزاويتين (جيب تمام)" }
+    ];
+
+
+        const formulaContent = document.getElementById("formula-content");
+        const formulaName = document.querySelector(".formula-name");
+
+        let formulaIndex = 0;
+        setInterval(() => {
+            formulaIndex = (formulaIndex + 1) % formulas.length;
+            formulaContent.innerHTML = formulas[formulaIndex].formula;
+            formulaName.textContent = formulas[formulaIndex].name;
+        }, 5000);
+
+        // تحديث شاشة الآلة الحاسبة
+        const calculatorScreen = document.getElementById("calculator-screen");
+        const calculatorValues = ["123.45", "42", "3.14159", "2.71828", "1.61803", "127", "0.5772"];
+        
+        let calcIndex = 0;
+        setInterval(() => {
+            calcIndex = (calcIndex + 1) % calculatorValues.length;
+            calculatorScreen.textContent = calculatorValues[calcIndex];
+        }, 3000);
+
+        // حلقة التحديث
+        (function loop() {
+            requestAnimationFrame(loop);
+            let now = timestamp();
+            let delta = (now - then) / 1000;
+            then = now;
+            fireworks.update(delta);
+        })();
+
+        // إضافة ألعاب نارية تلقائية عند بدء التحميل
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                fireworks.fireworks.push(new Firework(
+                    random(fireworks.spawnA, fireworks.spawnB),
+                    fireworks.height,
+                    random(0, fireworks.width),
+                    random(fireworks.spawnC, fireworks.spawnD),
+                    random(0, 360),
+                    random(30, 90)
+                ));
+            }
+        }, 500);
+    </script>
+</body>
+</html>
