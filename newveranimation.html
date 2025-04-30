@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع النصيحة 🌟</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #071736;
+            /* خلفية زرقاء داكنة للسماء الليلية */
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            /* الألعاب النارية في الخلفية */
+        }
+
+        .text-container {
+            position: relative;
+            z-index: 1;
+            /* النص فوق الألعاب النارية */
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 20px 0;
+            color: #fff;
+            font-weight: 900;
+            font-size: 5vw;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            animation: glow 2s infinite alternate;
+        }
+
+        h2 {
+            margin: 10px 0;
+            color: #f8f8f8;
+            font-weight: 700;
+            font-size: 3.5vw;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        /* النص الرئيسي */
+        .main-text-container {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+        }
+
+        .main-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            color: #fff;
+        }
+
+        .main-text span {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+        }
+
+        /* النجوم */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star-medium {
+            width: 3px;
+            height: 3px;
+        }
+
+        .star-large {
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        /* الرمز الرياضي */
+        .math-symbol {
+            position: absolute;
+            bottom: 15%;
+            left: 15%;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 40, 80, 0.6);
+            border-radius: 50%;
+            border: 3px solid rgba(0, 200, 255, 0.7);
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.7);
+            animation: glow 4s infinite alternate;
+        }
+
+        .math-symbol-inner {
+            font-size: 45px;
+            font-weight: bold;
+            color: #00eeff;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.9);
+        }
+
+        .top-200 {
+            position: absolute;
+            top: -25px;
+            right: -20px;
+            background: #ff6600;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.8);
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+                border-color: rgba(0, 200, 255, 0.7);
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 200, 255, 0.9);
+                border-color: rgba(100, 230, 255, 0.9);
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+            }
+        }
+
+        /* تأثيرات إضافية للرياضيات */
+        .geometric-shape {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.7;
+            border: 2px solid #00eeff;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.7);
+        }
+
+        .shape-1 {
+            top: 15%;
+            left: 15%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            bottom: 15%;
+            right: 15%;
+            animation: float 18s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            75% {
+                transform: translateY(20px) rotate(-5deg);
+            }
+        }
+
+        /* تأثير جزيئات الرياضيات المتحركة */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: rise 15s infinite linear;
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            color: white;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        .particle-pi {
+            color: #ff3300;
+        }
+
+        .particle-sigma {
+            color: #33ccff;
+        }
+
+        .particle-theta {
+            color: #9966ff;
+        }
+
+        .particle-phi {
+            color: #00ff66;
+        }
+
+        .particle-delta {
+            color: #ffcc00;
+        }
+
+        .formula-display {
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            width: 150px;
+            height: 80px;
+            background: rgba(10, 40, 80, 0.6);
+            border: 2px solid #00eeff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 4s infinite alternate;
+            z-index: 1;
+            color: #00eeff;
+            font-family: 'Times New Roman', serif;
+            font-size: 22px;
+            text-shadow: 0 0 8px rgba(0, 200, 255, 0.9);
+            padding: 10px;
+        }
+
+        .formula-name {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
+            }
+
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(0, 200, 255, 0.9);
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-100px) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+
+        /* رسم الأشكال الهندسية */
+        .geometric-container {
+            position: absolute;
+            bottom: 30%;
+            right: 10%;
+            width: 140px;
+            height: 140px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coordinate-system {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .axis {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            transform-origin: center;
+        }
+
+        .x-axis {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+        }
+
+        .y-axis {
+            width: 2px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+        }
+
+        .plot-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: -4px;
+            margin-top: -4px;
+            background: #00eeff;
+            box-shadow: 0 0 8px rgba(0, 200, 255, 0.9);
+        }
+
+        /* الآلة الحاسبة المتحركة */
+        .calculator {
+            position: absolute;
+            right: 10%;
+            bottom: 15%;
+            width: 80px;
+            height: 120px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calculator-screen {
+            height: 30px;
+            background: rgba(100, 255, 150, 0.3);
+            margin: 5px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: #00ff66;
+            font-family: 'Courier New', monospace;
+            padding-right: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            padding: 5px;
+            flex: 1;
+        }
+
+        .calc-button {
+            background: rgba(60, 80, 120, 0.8);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .calc-button-op {
+            background: rgba(100, 100, 160, 0.8);
+        }
+
+        .calc-button-eq {
+            background: rgba(100, 160, 100, 0.8);
+        }
+
+        /* درج الباخرة */
+        .ship-stairs {
+            position: absolute;
+            right: 25%;
+            bottom: 0;
+            width: 200px;
+            height: 200px;
+            z-index: 1;
+            perspective: 800px;
+        }
+
+        .stairs-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotateStairs 15s infinite linear;
+        }
+
+        @keyframes rotateStairs {
+            0% {
+                transform: rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .stair {
+            position: absolute;
+            width: 140px;
+            height: 20px;
+            background: rgba(180, 180, 180, 0.7);
+            border: 2px solid rgba(200, 200, 200, 0.8);
+            transform-origin: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .stair-1 {
+            transform: translateY(0) translateZ(20px);
+            width: 140px;
+        }
+
+        .stair-2 {
+            transform: translateY(20px) translateZ(10px);
+            width: 120px;
+            right: 10px;
+        }
+
+        .stair-3 {
+            transform: translateY(40px) translateZ(0);
+            width: 100px;
+            right: 20px;
+        }
+
+        .stair-4 {
+            transform: translateY(60px) translateZ(-10px);
+            width: 80px;
+            right: 30px;
+        }
+
+        .stair-5 {
+            transform: translateY(80px) translateZ(-20px);
+            width: 60px;
+            right: 40px;
+        }
+
+        .ship {
+            position: absolute;
+            bottom: 200px;
+            right: 40px;
+            width: 120px;
+            height: 80px;
+            z-index: 1;
+        }
+
+        .ship-body {
+            position: absolute;
+            bottom: 0;
+            width: 120px;
+            height: 40px;
+            background: linear-gradient(to bottom, #3a7bd5, #2c5ba0);
+            border-radius: 10px 10px 0 0;
+            transform: perspective(200px) rotateX(5deg);
+        }
+
+        .ship-deck {
+            position: absolute;
+            bottom: 40px;
+            width: 80px;
+            height: 20px;
+            background: #fff;
+            border-radius: 5px 5px 0 0;
+            right: 20px;
+        }
+
+        .ship-chimney {
+            position: absolute;
+            bottom: 60px;
+            right: 40px;
+            width: 15px;
+            height: 25px;
+            background: #d35400;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .ship-flag {
+            position: absolute;
+            bottom: 85px;
+            right: 45px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid #e74c3c;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .smoke {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: rgba(200, 200, 200, 0.8);
+            border-radius: 50%;
+            animation: smoke 3s infinite ease-out;
+        }
+
+        .smoke-1 {
+            bottom: 85px;
+            right: 40px;
+            animation-delay: 0s;
+        }
+
+        .smoke-2 {
+            bottom: 95px;
+            right: 35px;
+            animation-delay: 1s;
+        }
+
+        .smoke-3 {
+            bottom: 105px;
+            right: 45px;
+            animation-delay: 2s;
+        }
+
+        @keyframes smoke {
+            0% {
+                transform: scale(0.5) translateY(0);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.5) translateY(-20px) translateX(-10px);
+                opacity: 0;
+            }
+        }
+
+        .achievement-badge {
+            position: absolute;
+            top: 35%;
+            right: 30%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ffcc00 0%, #ff6600 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+            animation: rotate 10s infinite linear, pulse 2s infinite alternate;
+            z-index: 1;
+        }
+
+        .achievement-inner {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        /* الأنماط للأجهزة المحمولة */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 8vw;
+            }
+
+            h2 {
+                font-size: 6vw;
+            }
+
+            .main-text span {
+                font-size: 2.2em;
+            }
+
+            .math-symbol {
+                bottom: 20%;
+                left: 10%;
+                width: 90px;
+                height: 90px;
+            }
+
+            .math-symbol-inner {
+                font-size: 35px;
+            }
+
+            .geometric-shape {
+                width: 120px;
+                height: 120px;
+            }
+
+            .formula-display {
+                width: 130px;
+                height: 70px;
+                font-size: 20px;
+            }
+
+            .geometric-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .calculator {
+                width: 70px;
+                height: 100px;
+            }
+
+            .ship-stairs {
+                width: 150px;
+                height: 150px;
+                right: 15%;
+            }
+
+            .achievement-badge {
+                width: 100px;
+                height: 100px;
+                top: 40%;
+                right: 20%;
+            }
+
+            .achievement-inner {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 10vw;
+            }
+
+            h2 {
+                font-size: 7vw;
+            }
+
+            .main-text span {
+                font-size: 1.8em;
+            }
+
+            .main-text-container {
+                top: 5%;
+                right: 5%;
+            }
+
+            .math-symbol {
+                width: 70px;
+                height: 70px;
+            }
+
+            .math-symbol-inner {
+                font-size: 30px;
+            }
+
+            .geometric-shape {
+                width: 80px;
+                height: 80px;
+            }
+
+            .formula-display {
+                width: 100px;
+                height: 60px;
+                font-size: 16px;
+                top: 10%;
+                left: 2%;
+            }
+
+            .geometric-container {
+                width: 80px;
+                height: 80px;
+                bottom: 25%;
+                right: 5%;
+            }
+
+            .calculator {
+                width: 60px;
+                height: 90px;
+            }
+
+            .ship-stairs {
+                width: 120px;
+                height: 120px;
+                right: 10%;
+            }
+
+            .achievement-badge {
+                width: 80px;
+                height: 80px;
+                top: 35%;
+                right: 15%;
+                font-size: 18px;
+            }
+        }
+
+        /* Triangle shape */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 86px solid rgba(255, 204, 0, 0.3);
+            position: absolute;
+            top: 30%;
+            right: 25%;
+            animation: rotate 10s infinite linear;
+        }
+
+        /* Circle shape */
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 204, 255, 0.5);
+            background: rgba(0, 204, 255, 0.2);
+            position: absolute;
+            bottom: 40%;
+            left: 30%;
+            animation: pulse 7s infinite alternate;
+        }
+
+        /* Pentagon shape */
+        .pentagon {
+            width: 60px;
+            height: 60px;
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            background: rgba(255, 102, 204, 0.3);
+            border: 2px solid rgba(255, 102, 204, 0.5);
+            animation: rotate 12s infinite linear reverse;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* تأثير الكونفيتي */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            animation: confetti-fall 5s ease-in infinite;
+            z-index: 1;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* تأثير الألعاب النارية الصغيرة */
+        .small-firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            transform: scale(0);
+            z-index: 1;
+            animation: small-firework-explode 1.5s ease-out forwards;
+        }
+
+        @keyframes small-firework-explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+                box-shadow: 0 0 0px 0px currentColor;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+                box-shadow: 0 0 80px 40px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: currentColor;
+            transform-origin: center;
+            opacity: 1;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translateX(0) translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(var(--tx)) translateY(var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* صوت الألعاب النارية */
+        #sound-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="fireworks"></canvas>
+
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+
+    <div class="text-container">
+        <h1>رائع لقد وصلت للقمة</h1>
+        <h2>انت جاهز لخوض تحديات الوزاري</h2>
+    </div>
+
+    <!-- النص الرئيسي -->
+    <div class="main-text-container">
+        <div class="main-text">
+            <span>موقع النصيحة التعليمي</span>
+        </div>
+    </div>
+
+    <!-- الرمز الرياضي -->
+    <div class="math-symbol">
+        <div class="math-symbol-inner" style="color:red;">
+            200/200
+        </div>
+        <div class="top-200">قمة 200</div>
+    </div>
+
+    <!-- جزيئات الرياضيات المتحركة -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- عرض المعادلات الرياضية -->
+    <div class="formula-display">
+        <div id="formula-content">E = mc²</div>
+        <div class="formula-name">نظرية النسبية</div>
+    </div>
+
+    <!-- الآلة الحاسبة المتحركة -->
+    <div class="calculator">
+        <div class="calculator-screen" id="calculator-screen">200.00</div>
+        <div class="calculator-buttons">
+            <div class="calc-button">7</div>
+            <div class="calc-button">8</div>
+            <div class="calc-button">9</div>
+            <div class="calc-button calc-button-op">÷</div>
+            <div class="calc-button">4</div>
+            <div class="calc-button">5</div>
+            <div class="calc-button">6</div>
+            <div class="calc-button calc-button-op">×</div>
+            <div class="calc-button">1</div>
+            <div class="calc-button">2</div>
+            <div class="calc-button">3</div>
+            <div class="calc-button calc-button-op">-</div>
+            <div class="calc-button">0</div>
+            <div class="calc-button">.</div>
+            <div class="calc-button calc-button-eq">=</div>
+            <div class="calc-button calc-button-op">+</div>
+        </div>
+    </div>
+
+    <!-- درج الباخرة -->
+    <div class="ship-stairs">
+        <div class="stairs-container">
+            <div class="stair stair-1"></div>
+            <div class="stair stair-2"></div>
+            <div class="stair stair-3"></div>
+            <div class="stair stair-4"></div>
+            <div class="stair stair-5"></div>
+        </div>
+    </div>
+
+    <!-- الرسم البياني -->
+    <div class="geometric-container">
+        <div class="coordinate-system" id="coordinate-system">
+            <div class="axis x-axis"></div>
+            <div class="axis y-axis"></div>
+            <!-- النقاط ستضاف بالجافاسكريبت -->
+        </div>
+    </div>
+
+    <!-- الأشكال الهندسية -->
+    <div class="triangle"></div>
+    <div class="circle"></div>
+    <div class="pentagon"></div>
+
+    <!-- الكونفيتي -->
+    <div id="confetti-container"></div>
+
+    <!-- حاوية الألعاب النارية الصغيرة -->
+    <div id="small-fireworks-container"></div>
+
+    <script>
+        // دوال مساعدة
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => Math.random() * (max - min) + min;
+        const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+        const timestamp = () => new Date().getTime();
+
+        // إعداد الألوان للألعاب النارية
+        const COLORS = [
+            "#FF5252", // أحمر
+            "#FFD740", // ذهبي
+            "#64FFDA", // فيروزي
+            "#40C4FF", // أزرق فاتح
+            "#FF4081", // وردي
+            "#8C9EFF", // أزرق بنفسجي
+            "#69F0AE", // أخضر
+            "#FFAB40"  // برتقالي
+        ];
+
+        // إنشاء عناصر النجوم
+        function createStars() {
+            const stars = document.getElementById('stars');
+            const starsCount = window.innerWidth * 0.07; // عدد النجوم يعتمد على عرض الشاشة
+
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.className = `star star-${['small', 'medium', 'large'][Math.floor(Math.random() * 3)]}`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                stars.appendChild(star);
+            }
+        }
+
+        // فئة الألعاب النارية الكبيرة
+        // فئة الألعاب النارية الكبيرة (افتراضية بناءً على الكود غير المكتمل)
+        class Firework {
+            constructor() {
+                this.canvas = document.getElementById('fireworks');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.particles = [];
+                this.lastTime = timestamp();
+                this.createParticles();
+                this.animate();
+            }
+
+            createParticles() {
+                const x = random(100, window.innerWidth - 100);
+                const y = random(100, window.innerHeight - 100);
+                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                const particleCount = randomInt(30, 50);
+
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = (i / particleCount) * PI2;
+                    const velocity = random(2, 5);
+                    this.particles.push({
+                        x,
+                        y,
+                        vx: Math.cos(angle) * velocity,
+                        vy: Math.sin(angle) * velocity,
+                        color,
+                        size: random(2, 5),
+                        life: random(1000, 2000),
+                        start: timestamp()
+                    });
+                }
+
+                // إنشاء ألعاب نارية صغيرة في نفس الموقع
+                new SmallFirework(x, y, color);
+            }
+
+            animate() {
+                const currentTime = timestamp();
+                const deltaTime = currentTime - this.lastTime;
+                this.lastTime = currentTime;
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.particles = this.particles.filter(particle => {
+                    const elapsed = currentTime - particle.start;
+                    if (elapsed > particle.life) return false;
+
+                    particle.x += particle.vx * (deltaTime / 16);
+                    particle.y += particle.vy * (deltaTime / 16);
+                    particle.size *= 0.99; // تصغير تدريجي
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, PI2);
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.fill();
+
+                    return true;
+                });
+
+                if (Math.random() < 0.02) { // إنشاء ألعاب نارية جديدة بشكل عشوائي
+                    this.createParticles();
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // تهيئة الألعاب النارية والنجوم عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            createStars();
+            new Firework();
+
+            // إضافة الكونفيتي
+            const confettiContainer = document.getElementById('confetti-container');
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${random(0, 100)}%`;
+                confetti.style.backgroundColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+                confetti.style.animationDelay = `${random(0, 5)}s`;
+                confettiContainer.appendChild(confetti);
+            }
+        });
+
+        // إعادة ضبط حجم الكانفاس عند تغيير حجم النافذة
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('fireworks');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // إضافة صوت الألعاب النارية
+        const soundToggle = document.getElementById('sound-toggle');
+        let isSoundOn = false;
+        soundToggle.addEventListener('click', () => {
+            isSoundOn = !isSoundOn;
+            soundToggle.textContent = isSoundOn ? 'إيقاف الصوت' : 'تشغيل الصوت';
+            if (isSoundOn) {
+                fireworkSound.play();
+            } else {
+                fireworkSound.pause();
+            }
+        });
+    </script>
+</body>
+</html>
