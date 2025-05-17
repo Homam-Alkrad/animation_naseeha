@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Book with Turning Pages</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+        }
+        
+        .book {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            perspective: 1500px;
+        }
+        
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #FF9900;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00395B;
+            font-size: 32px;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+            z-index: 1;
+            transform-origin: left;
+            transition: transform 1s ease;
+            font-weight: bold;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 2px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: transform 1s ease;
+            z-index: 1;
+            background-image: linear-gradient(to bottom, #ffffff, #f5f5f5);
+        }
+        
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-style: italic;
+            color: #00A651;
+        }
+        
+        .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #FF8800;
+            border-radius: 5px;
+            z-index: 0;
+        }
+        
+        .spine {
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 100%;
+            background-color: #00395B;
+            transform: rotateY(90deg) translateZ(15px) translateX(-15px);
+            z-index: 0;
+        }
+        
+        .logo {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 80px;
+            height: auto;
+        }
+        
+        .chemistry-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #00A651;
+        }
+        
+        .molecules {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .molecule {
+            position: absolute;
+            font-size: 30px;
+            color: #00395B;
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="book-back"></div>
+        <div class="spine"></div>
+        <div class="book-cover" id="cover">
+            بداية المكثف<br>في<br>الكيمياء
+            <div class="molecules">
+                <div class="molecule" style="top: 20px; left: 20px;">⚛️</div>
+                <div class="molecule" style="top: 60px; left: 150px;">⚗️</div>
+                <div class="molecule" style="top: 200px; left: 80px;">🧪</div>
+                <div class="molecule" style="top: 150px; left: 300px;">🔬</div>
+                <div class="molecule" style="bottom: 40px; right: 100px;">🧫</div>
+            </div>
+        </div>
+        <div class="page" id="page1">
+            <div class="page-content">
+                <div class="chemistry-icon">H₂O</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">أبدعت وكسرت كل التوقعات!</p>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page2">
+            <div class="page-content">
+                <div class="chemistry-icon">CO₂</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">تفوقت لأنك رفعت سقف طموحك عالي.</p>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page3">
+            <div class="page-content">
+                <div class="chemistry-icon">NaCl</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مش بس نجحت، أنت تألقت!</p>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page4">
+            <div class="page-content">
+                <div class="chemistry-icon">H₂SO₄</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">إنجازك مش عادي، إبداعك دائمًا استثنائي.</p>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page5">
+            <div class="page-content">
+                <div class="chemistry-icon">CH₄</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مشيت بطريق التفوق وحققت اللي غيرك بس يحلم فيه.</p>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cover = document.getElementById('cover');
+            const pages = [
+                document.getElementById('page1'),
+                document.getElementById('page2'),
+                document.getElementById('page3'),
+                document.getElementById('page4'),
+                document.getElementById('page5')
+            ];
+            
+            // Initially hide all pages except the first one
+            for (let i = 1; i < pages.length; i++) {
+                pages[i].style.zIndex = pages.length - i;
+                pages[i].style.transform = 'rotateY(0deg)';
+            }
+            
+            // Function to turn a page
+            function turnPage(pageIndex) {
+                if (pageIndex === 0) {
+                    // First turn the cover
+                    cover.style.transform = 'rotateY(-180deg)';
+                    cover.style.zIndex = 0;
+                    setTimeout(() => {
+                        turnPage(1);
+                    }, 1000);
+                } else if (pageIndex < pages.length) {
+                    pages[pageIndex - 1].style.transform = 'rotateY(-180deg)';
+                    pages[pageIndex - 1].style.zIndex = 0;
+                    setTimeout(() => {
+                        turnPage(pageIndex + 1);
+                    }, 1000);
+                } else {
+                    // Reset animation after all pages are turned
+                    setTimeout(() => {
+                        resetBook();
+                    }, 2000);
+                }
+            }
+            
+            // Function to reset the book
+            function resetBook() {
+                cover.style.transform = 'rotateY(0deg)';
+                cover.style.zIndex = pages.length + 1;
+                
+                for (let i = 0; i < pages.length; i++) {
+                    pages[i].style.transform = 'rotateY(0deg)';
+                    pages[i].style.zIndex = pages.length - i;
+                }
+                
+                // After resetting the book, wait 2 seconds and redirect to animation2.html
+                setTimeout(() => {
+                    window.location.href = 'animation2.html';
+                }, 2000);
+            }
+            
+            // Function to start the animation
+            function startAnimation() {
+                setTimeout(() => {
+                    turnPage(0);
+                }, 2000);
+            }
+            
+            // Initial start
+            startAnimation();
+        });
+    </script>
+</body>
+</html>
