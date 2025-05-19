@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Book with Turning Pages</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+        }
+        
+        .book {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            perspective: 1500px;
+        }
+        
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 32px;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+            z-index: 10;
+            transform-origin: left;
+            transition: transform 1s ease;
+            font-weight: bold;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 2px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: transform 1s ease;
+            background-image: linear-gradient(to bottom, #ffffff, #f5f5f5);
+            opacity: 1;
+        }
+        
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-style: italic;
+            color: #3498db;
+        }
+        
+        .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #2980b9;
+            border-radius: 5px;
+            z-index: 0;
+        }
+        
+        .spine {
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 100%;
+            background-color: #1a5276;
+            transform: rotateY(90deg) translateZ(15px) translateX(-15px);
+            z-index: 0;
+        }
+        
+        .logo {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 80px;
+            height: auto;
+        }
+        
+        .math-symbol {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .math-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .math-element {
+            position: absolute;
+            font-size: 30px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="book-back"></div>
+        <div class="spine"></div>
+        <div class="book-cover" id="cover">
+            مكثف الرياضيات<br>من موقع<br>النصيحة
+            <div class="math-elements">
+                <div class="math-element" style="top: 20px; left: 20px;">π</div>
+                <div class="math-element" style="top: 60px; left: 150px;">∑</div>
+                <div class="math-element" style="top: 200px; left: 80px;">√</div>
+                <div class="math-element" style="top: 150px; left: 300px;">∞</div>
+                <div class="math-element" style="bottom: 40px; right: 100px;">∫</div>
+            </div>
+        </div>
+        <div class="page" id="page1">
+            <div class="page-content">
+                <div class="math-symbol">π = 3.14159...</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">أبدعت وكسرت كل التوقعات!</p>
+                <div class="page-number">1</div>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page2">
+            <div class="page-content">
+                <div class="math-symbol">∑ x²</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">تفوقت لأنك رفعت سقف طموحك عالي.</p>
+                <div class="page-number">2</div>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page3">
+            <div class="page-content">
+                <div class="math-symbol">√x</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مش بس نجحت، أنت تألقت!</p>
+                <div class="page-number">3</div>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page4">
+            <div class="page-content">
+                <div class="math-symbol">∫ f(x) dx</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">إنجازك مش عادي، إبداعك دائمًا استثنائي.</p>
+                <div class="page-number">4</div>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+        <div class="page" id="page5">
+            <div class="page-content">
+                <div class="math-symbol">∞</div>
+                <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مشيت بطريق التفوق وحققت اللي غيرك بس يحلم فيه.</p>
+                <div class="page-number">5</div>
+                <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cover = document.getElementById('cover');
+            const pages = [
+                document.getElementById('page1'),
+                document.getElementById('page2'),
+                document.getElementById('page3'),
+                document.getElementById('page4'),
+                document.getElementById('page5')
+            ];
+            
+            // Set initial state
+            function initializeBook() {
+                // Cover is on top
+                cover.style.transform = 'rotateY(0deg)';
+                cover.style.zIndex = 10;
+                
+                // Pages are stacked under the cover
+                for (let i = 0; i < pages.length; i++) {
+                    pages[i].style.transform = 'rotateY(0deg)';
+                    pages[i].style.zIndex = 5 - i; // Stack pages in order
+                }
+            }
+            
+            // Function to turn pages forward (cover to last page)
+            function turnPagesForward() {
+                // First turn the cover
+                setTimeout(() => {
+                    cover.style.transform = 'rotateY(-180deg)';
+                    cover.style.zIndex = 0;
+                }, 1000);
+                
+                // Then turn each page one by one
+                for (let i = 0; i < pages.length; i++) {
+                    setTimeout(() => {
+                        pages[i].style.transform = 'rotateY(-180deg)';
+                        pages[i].style.zIndex = 0;
+                    }, 2000 + (i * 1000));
+                }
+                
+                // After turning all pages, go backward
+                setTimeout(() => {
+                    turnPagesBackward();
+                }, 2000 + (pages.length * 1000));
+            }
+            
+            // Function to turn pages backward (last page to cover)
+            function turnPagesBackward() {
+                // Turn pages back in reverse order
+                for (let i = pages.length - 1; i >= 0; i--) {
+                    setTimeout(() => {
+                        pages[i].style.transform = 'rotateY(0deg)';
+                        pages[i].style.zIndex = 5 - i;
+                    }, 1000 + ((pages.length - 1 - i) * 1000));
+                }
+                
+                // Finally, turn the cover back
+                setTimeout(() => {
+                    cover.style.transform = 'rotateY(0deg)';
+                    cover.style.zIndex = 10;
+                }, 1000 + (pages.length * 1000));
+                
+                // After completing the cycle, redirect
+                setTimeout(() => {
+                    window.location.href = 'mathanimation.html';
+                }, 3000 + (pages.length * 1000));
+            }
+            
+            // Initialize and start animation
+            initializeBook();
+            setTimeout(() => {
+                turnPagesForward();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
