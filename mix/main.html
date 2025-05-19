@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Book with Turning Pages</title>
+    <title>Animated Chemistry Book with Turning Pages</title>
     <style>
         body {
             margin: 0;
@@ -39,7 +39,7 @@
             padding: 20px;
             box-sizing: border-box;
             transform-style: preserve-3d;
-            z-index: 1;
+            z-index: 10;
             transform-origin: left;
             transition: transform 1s ease;
             font-weight: bold;
@@ -60,8 +60,8 @@
             transform-style: preserve-3d;
             transform-origin: left;
             transition: transform 1s ease;
-            z-index: 1;
             background-image: linear-gradient(to bottom, #ffffff, #f5f5f5);
+            opacity: 1;
         }
         
         .page-content {
@@ -153,6 +153,7 @@
             <div class="page-content">
                 <div class="chemistry-icon">H₂O</div>
                 <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">أبدعت وكسرت كل التوقعات!</p>
+                <div class="page-number">1</div>
                 <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
             </div>
         </div>
@@ -160,6 +161,7 @@
             <div class="page-content">
                 <div class="chemistry-icon">CO₂</div>
                 <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">تفوقت لأنك رفعت سقف طموحك عالي.</p>
+                <div class="page-number">2</div>
                 <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
             </div>
         </div>
@@ -167,6 +169,7 @@
             <div class="page-content">
                 <div class="chemistry-icon">NaCl</div>
                 <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مش بس نجحت، أنت تألقت!</p>
+                <div class="page-number">3</div>
                 <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
             </div>
         </div>
@@ -174,6 +177,7 @@
             <div class="page-content">
                 <div class="chemistry-icon">H₂SO₄</div>
                 <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">إنجازك مش عادي، إبداعك دائمًا استثنائي.</p>
+                <div class="page-number">4</div>
                 <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
             </div>
         </div>
@@ -181,6 +185,7 @@
             <div class="page-content">
                 <div class="chemistry-icon">CH₄</div>
                 <p style="font-size: 24px; text-align: center; margin-top: 40px; direction: rtl;">مشيت بطريق التفوق وحققت اللي غيرك بس يحلم فيه.</p>
+                <div class="page-number">5</div>
                 <img src="https://naseehamath.com/website/assets/images/logo.jpg" class="logo" alt="لوغو">
             </div>
         </div>
@@ -197,60 +202,68 @@
                 document.getElementById('page5')
             ];
             
-            // Initially hide all pages except the first one
-            for (let i = 1; i < pages.length; i++) {
-                pages[i].style.zIndex = pages.length - i;
-                pages[i].style.transform = 'rotateY(0deg)';
-            }
-            
-            // Function to turn a page
-            function turnPage(pageIndex) {
-                if (pageIndex === 0) {
-                    // First turn the cover
-                    cover.style.transform = 'rotateY(-180deg)';
-                    cover.style.zIndex = 0;
-                    setTimeout(() => {
-                        turnPage(1);
-                    }, 1000);
-                } else if (pageIndex < pages.length) {
-                    pages[pageIndex - 1].style.transform = 'rotateY(-180deg)';
-                    pages[pageIndex - 1].style.zIndex = 0;
-                    setTimeout(() => {
-                        turnPage(pageIndex + 1);
-                    }, 1000);
-                } else {
-                    // Reset animation after all pages are turned
-                    setTimeout(() => {
-                        resetBook();
-                    }, 2000);
-                }
-            }
-            
-            // Function to reset the book
-            function resetBook() {
+            // Set initial state
+            function initializeBook() {
+                // Cover is on top
                 cover.style.transform = 'rotateY(0deg)';
-                cover.style.zIndex = pages.length + 1;
+                cover.style.zIndex = 10;
                 
+                // Pages are stacked under the cover
                 for (let i = 0; i < pages.length; i++) {
                     pages[i].style.transform = 'rotateY(0deg)';
-                    pages[i].style.zIndex = pages.length - i;
+                    pages[i].style.zIndex = 5 - i; // Stack pages in order
+                }
+            }
+            
+            // Function to turn pages forward (cover to last page)
+            function turnPagesForward() {
+                // First turn the cover
+                setTimeout(() => {
+                    cover.style.transform = 'rotateY(-180deg)';
+                    cover.style.zIndex = 0;
+                }, 1000);
+                
+                // Then turn each page one by one
+                for (let i = 0; i < pages.length; i++) {
+                    setTimeout(() => {
+                        pages[i].style.transform = 'rotateY(-180deg)';
+                        pages[i].style.zIndex = 0;
+                    }, 2000 + (i * 1000));
                 }
                 
-                // After resetting the book, wait 2 seconds and redirect to animation2.html
+                // After turning all pages, go backward
+                setTimeout(() => {
+                    turnPagesBackward();
+                }, 2000 + (pages.length * 1000));
+            }
+            
+            // Function to turn pages backward (last page to cover)
+            function turnPagesBackward() {
+                // Turn pages back in reverse order
+                for (let i = pages.length - 1; i >= 0; i--) {
+                    setTimeout(() => {
+                        pages[i].style.transform = 'rotateY(0deg)';
+                        pages[i].style.zIndex = 5 - i;
+                    }, 1000 + ((pages.length - 1 - i) * 1000));
+                }
+                
+                // Finally, turn the cover back
+                setTimeout(() => {
+                    cover.style.transform = 'rotateY(0deg)';
+                    cover.style.zIndex = 10;
+                }, 1000 + (pages.length * 1000));
+                
+                // After completing the cycle, redirect
                 setTimeout(() => {
                     window.location.href = 'animation2.html';
-                }, 2000);
+                }, 3000 + (pages.length * 1000));
             }
             
-            // Function to start the animation
-            function startAnimation() {
-                setTimeout(() => {
-                    turnPage(0);
-                }, 2000);
-            }
-            
-            // Initial start
-            startAnimation();
+            // Initialize and start animation
+            initializeBook();
+            setTimeout(() => {
+                turnPagesForward();
+            }, 2000);
         });
     </script>
 </body>
