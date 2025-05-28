@@ -21,6 +21,29 @@
             position: relative;
         }
 
+        /* شعار الموقع */
+        .logo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            overflow: hidden;
+            border: 3px solid rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* خلفية متحركة */
         .animated-bg {
             position: fixed;
@@ -54,6 +77,7 @@
             padding: 20px;
             z-index: 10;
             position: relative;
+            margin-top: 60px;
         }
 
         .page-title h1 {
@@ -222,24 +246,30 @@
             border-top: 8px solid rgba(0, 0, 0, 0.9);
         }
 
-        /* حركة الطيران */
+        /* حركة الطيران المحدثة - أبطأ */
         @keyframes flyAway {
             0% {
                 opacity: 1;
                 transform: scale(1) rotate(0deg);
             }
-            15% {
+            5% {
                 opacity: 1;
-                transform: scale(1.3) rotate(45deg);
+                transform: scale(1.3) rotate(15deg);
+            }
+            15% {
+                transform: scale(1.2) rotate(45deg) translateX(50px) translateY(-30px);
             }
             30% {
-                transform: scale(1.1) rotate(90deg) translateX(200px) translateY(-100px);
+                transform: scale(1.1) rotate(90deg) translateX(150px) translateY(-80px);
             }
-            60% {
-                transform: scale(0.9) rotate(180deg) translateX(400px) translateY(-300px);
+            50% {
+                transform: scale(1.0) rotate(180deg) translateX(300px) translateY(-200px);
             }
-            80% {
-                transform: scale(0.7) rotate(270deg) translateX(600px) translateY(-500px);
+            70% {
+                transform: scale(0.9) rotate(270deg) translateX(450px) translateY(-350px);
+            }
+            85% {
+                transform: scale(0.7) rotate(315deg) translateX(600px) translateY(-500px);
             }
             100% {
                 opacity: 0;
@@ -248,15 +278,15 @@
         }
 
         @keyframes bubbleShow {
-            0%, 15% {
+            0%, 10% {
                 opacity: 0;
                 transform: translateX(-50%) translateY(-20px) scale(0.6);
             }
-            25%, 70% {
+            20%, 80% {
                 opacity: 1;
                 transform: translateX(-50%) translateY(0) scale(1);
             }
-            85%, 100% {
+            90%, 100% {
                 opacity: 0;
                 transform: translateX(-50%) translateY(20px) scale(0.8);
             }
@@ -323,6 +353,9 @@
             z-index: 2000;
             display: flex;
             gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .control-btn {
@@ -345,6 +378,54 @@
 
         .control-btn:active {
             transform: translateY(0);
+        }
+
+        /* التحكم بالسرعة */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .speed-label {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .speed-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .speed-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .speed-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 215, 0, 0.7);
+        }
+
+        .speed-option.active {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            border-color: #ffd700;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
         /* تأثيرات الجسيمات */
@@ -379,6 +460,13 @@
 
         /* استجابة للجوال */
         @media (max-width: 768px) {
+            .logo {
+                width: 60px;
+                height: 60px;
+                top: 10px;
+                right: 10px;
+            }
+
             .periodic-table {
                 max-width: 100%;
                 gap: 2px;
@@ -397,6 +485,10 @@
                 font-size: 5px;
             }
             
+            .page-title {
+                margin-top: 80px;
+            }
+
             .page-title h1 {
                 font-size: 2rem;
             }
@@ -411,6 +503,21 @@
 
             .countdown {
                 font-size: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .speed-control {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .speed-options {
+                justify-content: center;
             }
         }
 
@@ -434,6 +541,11 @@
 
             .countdown {
                 font-size: 1.2rem;
+            }
+
+            .speed-option {
+                padding: 6px 12px;
+                font-size: 12px;
             }
         }
 
@@ -502,6 +614,15 @@
 
     <!-- أزرار التحكم -->
     <div class="controls">
+        <div class="speed-control">
+            <div class="speed-label">⚡ سرعة السقوط</div>
+            <div class="speed-options">
+                <div class="speed-option" data-speed="0.5">0.5x</div>
+                <div class="speed-option active" data-speed="1">1x</div>
+                <div class="speed-option" data-speed="1.5">1.5x</div>
+                <div class="speed-option" data-speed="2">2x</div>
+            </div>
+        </div>
         <button class="control-btn" onclick="resetTable()">🔄 إعادة تعيين</button>
     </div>
 
@@ -572,6 +693,7 @@
         let flyingElementsCount = 0;
         let elementCounter = 0;
         let countdownInterval;
+        let currentSpeed = 1; // السرعة الافتراضية
 
         // بدء العد التنازلي
         function startCountdown() {
@@ -678,6 +800,30 @@
             return colors[className] || '#ffffff';
         }
 
+        // إعداد التحكم بالسرعة
+        function setupSpeedControl() {
+            const speedOptions = document.querySelectorAll('.speed-option');
+            
+            speedOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // إزالة التحديد السابق
+                    speedOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // تحديد الخيار الجديد
+                    option.classList.add('active');
+                    
+                    // تحديث السرعة
+                    currentSpeed = parseFloat(option.dataset.speed);
+                    
+                    // إضافة تأثير بصري
+                    option.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        option.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+        }
+
         // بدء رحلة العناصر
         function startJourney() {
             if (animationInProgress) return;
@@ -696,10 +842,14 @@
             // تحديث شريط التقدم للبداية
             updateProgressBar();
             
+            // حساب التأخير بناءً على السرعة
+            const baseDelay = 600;
+            const adjustedDelay = baseDelay / currentSpeed;
+            
             elements.forEach((element, index) => {
                 setTimeout(() => {
                     flyElement(element);
-                }, index * 600);
+                }, index * adjustedDelay);
             });
         }
 
@@ -733,15 +883,18 @@
             // تأثير الجسيمات
             createParticleExplosion(originalElement);
             
-            // إضافة صوت محاكاة
-            playSound('fly');
+
             updateCounter();
+            
+            // حساب مدة الطيران بناءً على السرعة
+            const baseDuration = 14; // مدة أساسية أطول (8 ثوان)
+            const adjustedDuration = baseDuration / currentSpeed;
             
             // بدء الطيران
             setTimeout(() => {
                 flyingElement.style.opacity = '1';
-                flyingElement.style.animation = 'flyAway 4s ease-in-out forwards';
-                flyingElement.querySelector('.motivation-bubble').style.animation = 'bubbleShow 4s ease-in-out forwards';
+                flyingElement.style.animation = `flyAway ${adjustedDuration}s ease-in-out forwards`;
+                flyingElement.querySelector('.motivation-bubble').style.animation = `bubbleShow ${adjustedDuration}s ease-in-out forwards`;
             }, 100);
             
             // إزالة العنصر الطائر بعد انتهاء الحركة
@@ -755,10 +908,9 @@
                 if (flyingElementsCount >= elementsData.length) {
                     setTimeout(() => {
                         showFinalMessage();
-                        playSound('complete');
                     }, 1000);
                 }
-            }, 4000);
+            }, adjustedDuration * 1000);
         }
 
         // إنشاء انفجار الجسيمات
@@ -825,8 +977,7 @@
             flyingElementsCount = 0;
             elementCounter = 0;
             animationInProgress = false;
-            playSound('reset');
-            
+
             // إخفاء شريط التقدم
             const progressContainer = document.getElementById('progressContainer');
             if (progressContainer) {
@@ -859,7 +1010,7 @@
             progressContainer.style.cssText = `
                 position: fixed;
                 top: 20px;
-                right: 20px;
+                left: 20px;
                 background: rgba(0, 0, 0, 0.8);
                 padding: 15px;
                 border-radius: 10px;
@@ -873,12 +1024,12 @@
             `;
             
             progressContainer.innerHTML = `
-                <div>🧪 رحلة الفصل</div>
+                <div>🧪 رحلة العناصر</div>
                 <div id="progressText">0 من ${elementsData.length}</div>
                 <div style="background: rgba(255, 255, 255, 0.2); height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden;">
                     <div id="progressBar" style="background: linear-gradient(90deg, #ffd700, #ff8c00); height: 100%; width: 0%; transition: width 0.5s ease;"></div>
                 </div>
-                <div id="currentElement" style="color: #ffd700; font-weight: bold;">الرحلة بدأت! </div>
+                <div id="currentElement" style="color: #ffd700; font-weight: bold;">الرحلة بدأت! ⚡${currentSpeed}x</div>
             `;
             
             document.body.appendChild(progressContainer);
@@ -904,7 +1055,7 @@
                         progressContainer.style.display = 'none';
                     }, 3000);
                 } else {
-                    currentElement.textContent = `العنصر التالي جاهز... ✨`;
+                    currentElement.textContent = `السرعة: ${currentSpeed}x ⚡`;
                 }
             }
         }
@@ -912,30 +1063,15 @@
         // تحديث العداد
         function updateCounter() {
             elementCounter++;
-            console.log(`🚀 طار ${elementCounter} من أصل ${elementsData.length} عنصر - المتبقي: ${elementsData.length - elementCounter}`);
-            
+ 
             // تحديث العنوان ليعكس التقدم
             const progress = Math.round((elementCounter / elementsData.length) * 100);
-            document.title = `الجدول الدوري التفاعلي - ${progress}% مكتمل`;
+            document.title = `الجدول الدوري التفاعلي - ${progress}% مكتمل (${currentSpeed}x)`;
             
             // تحديث شريط التقدم
             updateProgressBar();
         }
 
-        // تأثيرات صوتية محاكاة
-        function playSound(type) {
-            switch(type) {
-                case 'fly':
-                    console.log('🎵 عنصر يطير! ✈️');
-                    break;
-                case 'complete':
-                    console.log('🎉 تم إكمال الرحلة! جميع العناصر طارت بنجاح!');
-                    break;
-                case 'reset':
-                    console.log('🔄 إعادة تعيين الجدول - العناصر تعود لأماكنها');
-                    break;
-            }
-        }
 
         // إظهار احصائيات العناصر
         function showElementStats() {
@@ -950,10 +1086,9 @@
                 'actinide': elementsData.filter(e => e.class === 'actinide').length
             };
             
-            console.log('📊 إحصائيات العناصر في الجدول:');
             Object.entries(stats).forEach(([type, count]) => {
                 if (count > 0) {
-                    console.log(`${type}: ${count} عنصر`);
+                  
                 }
             });
         }
@@ -962,14 +1097,10 @@
         function init() {
             createAnimatedBackground();
             createPeriodicTable();
+            setupSpeedControl();
             showElementStats();
             
-            // إضافة رسالة ترحيب
-            console.log('🧪 مرحباً بك في الجدول الدوري التفاعلي!');
-            console.log('⌨️ اختصارات لوحة المفاتيح:');
-            console.log('  - R: إعادة تعيين');
-            console.log('  - Escape: إيقاف الرحلة');
-            
+
             // بدء العد التنازلي تلقائياً
             setTimeout(() => {
                 startCountdown();
@@ -1005,6 +1136,16 @@
                 if (animationInProgress) {
                     resetTable();
                 }
+            } else if (['1', '2', '3', '4'].includes(e.key)) {
+                // تغيير السرعة بالأرقام
+                const speeds = ['0.5', '1', '1.5', '2'];
+                const speedIndex = parseInt(e.key) - 1;
+                if (speedIndex >= 0 && speedIndex < speeds.length) {
+                    const speedOption = document.querySelector(`[data-speed="${speeds[speedIndex]}"]`);
+                    if (speedOption) {
+                        speedOption.click();
+                    }
+                }
             }
         });
 
@@ -1018,8 +1159,6 @@
                 
                 // عرض معلومات العنصر في الكونسول
                 const data = JSON.parse(element.dataset.elementData);
-                console.log(`🧪 عنصر: ${data.name} (${data.symbol}) - ${data.message}`);
-                
                 setTimeout(() => {
                     element.style.boxShadow = '';
                     element.style.transform = 'scale(1)';
