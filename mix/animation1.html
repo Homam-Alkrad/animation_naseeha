@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الدوري المتحرك - رحلة العناصر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 25%, #2d1b69 50%, #134e5e 75%, #71b280 100%);
+            font-family: 'Cairo', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية متحركة */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .bg-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: bgFloat 20s infinite linear;
+        }
+
+        @keyframes bgFloat {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* عنوان الصفحة */
+        .page-title {
+            text-align: center;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .page-title h1 {
+            font-size: 3rem;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            margin-bottom: 10px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        .page-title p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        /* عداد العد التنازلي */
+        .countdown {
+            font-size: 2rem;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            margin-top: 20px;
+            animation: countdownPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            100% { text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 140, 0, 0.8); }
+        }
+
+        /* حاوية الجدول الدوري */
+        .periodic-table-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 5;
+            margin-bottom: 50px;
+        }
+
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 3px;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        /* عنصر الجدول الدوري */
+        .element {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .element-number {
+            font-size: 8px;
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            opacity: 0.7;
+        }
+
+        .element-symbol {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .element-name {
+            font-size: 6px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* ألوان العناصر */
+        .alkali { --element-color: #ff6b6b; border-color: var(--element-color); }
+        .alkaline { --element-color: #feca57; border-color: var(--element-color); }
+        .transition { --element-color: #48dbfb; border-color: var(--element-color); }
+        .metalloid { --element-color: #ff9ff3; border-color: var(--element-color); }
+        .nonmetal { --element-color: #54a0ff; border-color: var(--element-color); }
+        .halogen { --element-color: #5f27cd; border-color: var(--element-color); }
+        .noble { --element-color: #00d2d3; border-color: var(--element-color); }
+        .lanthanide { --element-color: #ff6348; border-color: var(--element-color); }
+        .actinide { --element-color: #2ed573; border-color: var(--element-color); }
+
+        .alkali .element-symbol { color: var(--element-color); }
+        .alkaline .element-symbol { color: var(--element-color); }
+        .transition .element-symbol { color: var(--element-color); }
+        .metalloid .element-symbol { color: var(--element-color); }
+        .nonmetal .element-symbol { color: var(--element-color); }
+        .halogen .element-symbol { color: var(--element-color); }
+        .noble .element-symbol { color: var(--element-color); }
+        .lanthanide .element-symbol { color: var(--element-color); }
+        .actinide .element-symbol { color: var(--element-color); }
+
+        /* العنصر الطائر */
+        .flying-element {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .flying-element .element {
+            width: 100%;
+            height: 100%;
+            border-width: 3px;
+            box-shadow: 0 0 30px var(--element-color);
+        }
+
+        .flying-element .element-symbol {
+            font-size: 28px;
+        }
+
+        .flying-element .element-name {
+            font-size: 10px;
+        }
+
+        /* رسالة التحفيز المرفقة */
+        .motivation-bubble {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            border: 1px solid var(--element-color);
+            box-shadow: 0 0 15px var(--element-color);
+        }
+
+        .motivation-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(0, 0, 0, 0.9);
+        }
+
+        /* حركة الطيران */
+        @keyframes flyAway {
+            0% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+            15% {
+                opacity: 1;
+                transform: scale(1.3) rotate(45deg);
+            }
+            30% {
+                transform: scale(1.1) rotate(90deg) translateX(200px) translateY(-100px);
+            }
+            60% {
+                transform: scale(0.9) rotate(180deg) translateX(400px) translateY(-300px);
+            }
+            80% {
+                transform: scale(0.7) rotate(270deg) translateX(600px) translateY(-500px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.3) rotate(360deg) translateX(800px) translateY(-700px);
+            }
+        }
+
+        @keyframes bubbleShow {
+            0%, 15% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px) scale(0.6);
+            }
+            25%, 70% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+            85%, 100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px) scale(0.8);
+            }
+        }
+
+        /* الرسالة النهائية */
+        .final-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2000;
+            opacity: 0;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .final-message.show {
+            animation: finalReveal 2s ease-out forwards;
+        }
+
+        .final-text {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            margin-bottom: 20px;
+            animation: textPulse 2s ease-in-out infinite alternate;
+        }
+
+        .final-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes finalReveal {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(-10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes textPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* أزرار التحكم */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            gap: 20px;
+        }
+
+        .control-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        /* تأثيرات الجسيمات */
+        .element-particles {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--element-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleExplode 1s ease-out;
+        }
+
+        @keyframes particleExplode {
+            0% {
+                opacity: 1;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1) translate(var(--random-x), var(--random-y));
+            }
+        }
+
+        /* استجابة للجوال */
+        @media (max-width: 768px) {
+            .periodic-table {
+                max-width: 100%;
+                gap: 2px;
+            }
+            
+            .element {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .element-symbol {
+                font-size: 14px;
+            }
+            
+            .element-name {
+                font-size: 5px;
+            }
+            
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            
+            .final-text {
+                font-size: 2rem;
+            }
+            
+            .final-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .countdown {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .element {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .element-symbol {
+                font-size: 12px;
+            }
+            
+            .element-number {
+                font-size: 6px;
+            }
+            
+            .final-text {
+                font-size: 1.5rem;
+            }
+
+            .countdown {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* تأثير الموجة عند النقر */
+        .wave-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            animation: waveExpand 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes waveExpand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+
+        /* تأثير انتعاش الجدول */
+        @keyframes tableRefresh {
+            0% { 
+                transform: scale(0.95); 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: scale(1); 
+                opacity: 1; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- خلفية متحركة -->
+    <div class="animated-bg" id="animatedBg"></div>
+
+    <!-- عنوان الصفحة -->
+    <div class="page-title">
+        <h1> كل عنصر فيك صار جاهز... للانفجار في امتحان الوزاري! 💥</h1>
+        <div class="countdown" id="countdown"> بدء الرحلة خلال 3 ثوان</div>
+    </div>
+
+    <!-- حاوية الجدول الدوري -->
+    <div class="periodic-table-container">
+        <div class="periodic-table" id="periodicTable">
+            <!-- سيتم إنشاء العناصر بواسطة JavaScript -->
+        </div>
+    </div>
+
+    <!-- الرسالة النهائية -->
+    <div class="final-message" id="finalMessage">
+        <div class="final-text">طاقتك الكيميائية وصلت أقصاها... انفجر بالنجاح في الوزاري! ⚡</div>
+        <div class="final-subtitle">عناصرك تتحد لتصنع إنجازًا عظيمًا ✨</div>
+    </div>
+
+    <!-- أزرار التحكم -->
+    <div class="controls">
+        <button class="control-btn" onclick="resetTable()">🔄 إعادة تعيين</button>
+    </div>
+
+    <script>
+        // بيانات العناصر مع رسائل التحفيز - الجدول الدوري الكامل
+        const elementsData = [
+            // الدورة الأولى
+            { number: 1, symbol: 'H', name: 'هيدروجين', class: 'nonmetal', message: 'عنصر الأمل والبداية الجديدة! 🌟', position: [0, 0] },
+            { number: 2, symbol: 'He', name: 'هيليوم', class: 'noble', message: 'خفة الروح والارتقاء! 🎈', position: [0, 17] },
+            
+            // الدورة الثانية
+            { number: 3, symbol: 'Li', name: 'ليثيوم', class: 'alkali', message: 'طاقة إيجابية لا تنتهي! ⚡', position: [1, 0] },
+            { number: 4, symbol: 'Be', name: 'بيريليوم', class: 'alkaline', message: 'قوة الثبات والعزيمة! 💪', position: [1, 1] },
+            { number: 5, symbol: 'B', name: 'بورون', class: 'metalloid', message: 'ذكاء البناء والتطوير! 🧠', position: [1, 12] },
+            { number: 6, symbol: 'C', name: 'كربون', class: 'nonmetal', message: 'أساس الحياة والإبداع! 💎', position: [1, 13] },
+            { number: 7, symbol: 'N', name: 'نيتروجين', class: 'nonmetal', message: 'هواء المعرفة والنمو! 🌱', position: [1, 14] },
+            { number: 8, symbol: 'O', name: 'أكسجين', class: 'nonmetal', message: 'نفس الحياة والتجديد! 🫁', position: [1, 15] },
+            { number: 9, symbol: 'F', name: 'فلور', class: 'halogen', message: 'قوة التنظيف والتطهير! ✨', position: [1, 16] },
+            { number: 10, symbol: 'Ne', name: 'نيون', class: 'noble', message: 'إضاءة الطريق للنجاح! 💡', position: [1, 17] },
+            
+            // الدورة الثالثة
+            { number: 11, symbol: 'Na', name: 'صوديوم', class: 'alkali', message: 'ملح الحياة والتوازن! ⚖️', position: [2, 0] },
+            { number: 12, symbol: 'Mg', name: 'مغنيسيوم', class: 'alkaline', message: 'قوة العضلات والنشاط! 🏋️', position: [2, 1] },
+            { number: 13, symbol: 'Al', name: 'ألومنيوم', class: 'transition', message: 'خفة الحركة والمرونة! 🏃', position: [2, 12] },
+            { number: 14, symbol: 'Si', name: 'سيليكون', class: 'metalloid', message: 'أساس التكنولوجيا! 💻', position: [2, 13] },
+            { number: 15, symbol: 'P', name: 'فوسفور', class: 'nonmetal', message: 'إضاءة الفكر والذكاء! 🔥', position: [2, 14] },
+            { number: 16, symbol: 'S', name: 'كبريت', class: 'nonmetal', message: 'قوة التحول والتغيير! 🔄', position: [2, 15] },
+            { number: 17, symbol: 'Cl', name: 'كلور', class: 'halogen', message: 'نظافة الفكر والوضوح! 🧽', position: [2, 16] },
+            { number: 18, symbol: 'Ar', name: 'أرجون', class: 'noble', message: 'حماية الحلم والهدف! 🛡️', position: [2, 17] },
+            
+            // الدورة الرابعة
+            { number: 19, symbol: 'K', name: 'بوتاسيوم', class: 'alkali', message: 'نشاط القلب والحماس! ❤️', position: [3, 0] },
+            { number: 20, symbol: 'Ca', name: 'كالسيوم', class: 'alkaline', message: 'قوة العظام والثبات! 🦴', position: [3, 1] },
+            { number: 21, symbol: 'Sc', name: 'سكانديوم', class: 'transition', message: 'ندرة التميز والقيمة! 💎', position: [3, 2] },
+            { number: 22, symbol: 'Ti', name: 'تيتانيوم', class: 'transition', message: 'قوة لا تُقهر وصلابة! 🛡️', position: [3, 3] },
+            { number: 23, symbol: 'V', name: 'فاناديوم', class: 'transition', message: 'مرونة في القوة! 🤸', position: [3, 4] },
+            { number: 24, symbol: 'Cr', name: 'كروم', class: 'transition', message: 'لمعة النجاح والتألق! ✨', position: [3, 5] },
+            { number: 25, symbol: 'Mn', name: 'منغنيز', class: 'transition', message: 'عنصر الإدارة والتنظيم! 📊', position: [3, 6] },
+            { number: 26, symbol: 'Fe', name: 'حديد', class: 'transition', message: 'عمود القوة والصناعة! 🏗️', position: [3, 7] },
+            { number: 27, symbol: 'Co', name: 'كوبالت', class: 'transition', message: 'زرقة السماء والأحلام! 💙', position: [3, 8] },
+            { number: 28, symbol: 'Ni', name: 'نيكل', class: 'transition', message: 'مقاومة التآكل والثبات! 🛡️', position: [3, 9] },
+            { number: 29, symbol: 'Cu', name: 'نحاس', class: 'transition', message: 'توصيل الطاقة والحرارة! ⚡', position: [3, 10] },
+            { number: 30, symbol: 'Zn', name: 'زنك', class: 'transition', message: 'الحماية من التأكسد! 🛡️', position: [3, 11] },
+            { number: 31, symbol: 'Ga', name: 'غاليوم', class: 'transition', message: 'ذوبان في درجات عالية! 🌡️', position: [3, 12] },
+            { number: 32, symbol: 'Ge', name: 'جرمانيوم', class: 'metalloid', message: 'نصف موصل للنجاح! 💻', position: [3, 13] },
+            { number: 33, symbol: 'As', name: 'زرنيخ', class: 'metalloid', message: 'القوة في الصغر! ⚡', position: [3, 14] },
+            { number: 34, symbol: 'Se', name: 'سيلينيوم', class: 'nonmetal', message: 'مضاد الأكسدة الطبيعي! 🌿', position: [3, 15] },
+            { number: 35, symbol: 'Br', name: 'بروم', class: 'halogen', message: 'السائل الأحمر المدهش! 🔴', position: [3, 16] },
+            { number: 36, symbol: 'Kr', name: 'كريبتون', class: 'noble', message: 'قوة خفية كالأبطال! 🦸', position: [3, 17] },
+            
+            // الدورة الخامسة (مختارة)
+            { number: 37, symbol: 'Rb', name: 'روبيديوم', class: 'alkali', message: 'الأحمر الملكي! 👑', position: [4, 0] },
+            { number: 38, symbol: 'Sr', name: 'سترونتيوم', class: 'alkaline', message: 'لون الألعاب النارية! 🎆', position: [4, 1] },
+            { number: 47, symbol: 'Ag', name: 'فضة', class: 'transition', message: 'نقاء المعدن النبيل! 🥈', position: [4, 10] },
+            { number: 53, symbol: 'I', name: 'يود', class: 'halogen', message: 'البنفسجي الطبي! 💜', position: [4, 16] },
+            { number: 54, symbol: 'Xe', name: 'زينون', class: 'noble', message: 'إضاءة المستقبل! 💡', position: [4, 17] },
+            
+            // الدورة السادسة (مختارة)
+            { number: 79, symbol: 'Au', name: 'ذهب', class: 'transition', message: 'ملك المعادن والثروة! 👑', position: [5, 10] },
+            { number: 80, symbol: 'Hg', name: 'زئبق', class: 'transition', message: 'السائل الفضي السحري! 🌊', position: [5, 11] },
+            { number: 82, symbol: 'Pb', name: 'رصاص', class: 'transition', message: 'ثقل المسؤولية! ⚖️', position: [5, 13] },
+            
+            // عناصر مميزة أخرى
+            { number: 92, symbol: 'U', name: 'يورانيوم', class: 'actinide', message: 'طاقة الذرة اللانهائية! ⚛️', position: [6, 3] },
+        ];
+
+        let animationInProgress = false;
+        let flyingElementsCount = 0;
+        let elementCounter = 0;
+        let countdownInterval;
+
+        // بدء العد التنازلي
+        function startCountdown() {
+            let countdown = 3;
+            const countdownElement = document.getElementById('countdown');
+            
+            countdownInterval = setInterval(() => {
+                if (countdown > 0) {
+                    countdownElement.textContent = `🚀 بدء الرحلة خلال ${countdown} ثوان`;
+                    countdown--;
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = '🎉 تبدأ الرحلة الآن!';
+                    setTimeout(() => {
+                        countdownElement.style.display = 'none';
+                        startJourney();
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        // إنشاء خلفية متحركة
+        function createAnimatedBackground() {
+            const bg = document.getElementById('animatedBg');
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                bg.appendChild(particle);
+            }
+        }
+
+        // إنشاء الجدول الدوري
+        function createPeriodicTable() {
+            const table = document.getElementById('periodicTable');
+            
+            // إنشاء شبكة 7x18
+            for (let row = 0; row < 7; row++) {
+                for (let col = 0; col < 18; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'element empty';
+                    cell.style.gridRow = row + 1;
+                    cell.style.gridColumn = col + 1;
+                    table.appendChild(cell);
+                }
+            }
+
+            // إضافة العناصر الحقيقية
+            elementsData.forEach(elementData => {
+                const element = document.createElement('div');
+                element.className = `element ${elementData.class}`;
+                element.style.gridRow = elementData.position[0] + 1;
+                element.style.gridColumn = elementData.position[1] + 1;
+                element.style.setProperty('--element-color', getElementColor(elementData.class));
+                
+                element.innerHTML = `
+                    <div class="element-number">${elementData.number}</div>
+                    <div class="element-symbol">${elementData.symbol}</div>
+                    <div class="element-name">${elementData.name}</div>
+                `;
+                
+                element.dataset.message = elementData.message;
+                element.dataset.elementData = JSON.stringify(elementData);
+                
+                // إضافة تأثير الموجة عند النقر
+                element.addEventListener('click', function(e) {
+                    if (!animationInProgress) {
+                        createWaveEffect(e.target);
+                    }
+                });
+                
+                table.appendChild(element);
+            });
+        }
+
+        // إنشاء تأثير الموجة
+        function createWaveEffect(element) {
+            const wave = document.createElement('div');
+            wave.className = 'wave-effect';
+            element.appendChild(wave);
+            
+            setTimeout(() => {
+                if (wave.parentNode) {
+                    wave.parentNode.removeChild(wave);
+                }
+            }, 600);
+        }
+
+        // الحصول على لون العنصر
+        function getElementColor(className) {
+            const colors = {
+                'alkali': '#ff6b6b',
+                'alkaline': '#feca57',
+                'transition': '#48dbfb',
+                'metalloid': '#ff9ff3',
+                'nonmetal': '#54a0ff',
+                'halogen': '#5f27cd',
+                'noble': '#00d2d3',
+                'lanthanide': '#ff6348',
+                'actinide': '#2ed573'
+            };
+            return colors[className] || '#ffffff';
+        }
+
+        // بدء رحلة العناصر
+        function startJourney() {
+            if (animationInProgress) return;
+            
+            animationInProgress = true;
+            flyingElementsCount = 0;
+            elementCounter = 0;
+            
+            // إنشاء شريط التقدم إذا لم يكن موجوداً
+            if (!document.getElementById('progressContainer')) {
+                createProgressBar();
+            }
+            
+            const elements = document.querySelectorAll('.element:not(.empty)');
+            
+            // تحديث شريط التقدم للبداية
+            updateProgressBar();
+            
+            elements.forEach((element, index) => {
+                setTimeout(() => {
+                    flyElement(element);
+                }, index * 600);
+            });
+        }
+
+        // تطيير عنصر واحد
+        function flyElement(originalElement) {
+            const elementData = JSON.parse(originalElement.dataset.elementData);
+            const rect = originalElement.getBoundingClientRect();
+            
+            // إنشاء عنصر طائر
+            const flyingElement = document.createElement('div');
+            flyingElement.className = `flying-element ${elementData.class}`;
+            flyingElement.style.setProperty('--element-color', getElementColor(elementData.class));
+            flyingElement.style.left = rect.left + 'px';
+            flyingElement.style.top = rect.top + 'px';
+            
+            flyingElement.innerHTML = `
+                <div class="element">
+                    <div class="element-number">${elementData.number}</div>
+                    <div class="element-symbol">${elementData.symbol}</div>
+                    <div class="element-name">${elementData.name}</div>
+                </div>
+                <div class="motivation-bubble">${elementData.message}</div>
+            `;
+            
+            document.body.appendChild(flyingElement);
+            
+            // إخفاء العنصر الأصلي
+            originalElement.style.opacity = '0.2';
+            originalElement.style.transform = 'scale(0.8)';
+            
+            // تأثير الجسيمات
+            createParticleExplosion(originalElement);
+            
+            // إضافة صوت محاكاة
+            playSound('fly');
+            updateCounter();
+            
+            // بدء الطيران
+            setTimeout(() => {
+                flyingElement.style.opacity = '1';
+                flyingElement.style.animation = 'flyAway 4s ease-in-out forwards';
+                flyingElement.querySelector('.motivation-bubble').style.animation = 'bubbleShow 4s ease-in-out forwards';
+            }, 100);
+            
+            // إزالة العنصر الطائر بعد انتهاء الحركة
+            setTimeout(() => {
+                if (flyingElement.parentNode) {
+                    flyingElement.parentNode.removeChild(flyingElement);
+                }
+                flyingElementsCount++;
+                
+                // إظهار الرسالة النهائية عند انتهاء جميع العناصر
+                if (flyingElementsCount >= elementsData.length) {
+                    setTimeout(() => {
+                        showFinalMessage();
+                        playSound('complete');
+                    }, 1000);
+                }
+            }, 4000);
+        }
+
+        // إنشاء انفجار الجسيمات
+        function createParticleExplosion(element) {
+            const particles = document.createElement('div');
+            particles.className = 'element-particles';
+            element.appendChild(particles);
+            
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.setProperty('--element-color', getComputedStyle(element).getPropertyValue('--element-color'));
+                
+                const angle = (Math.PI * 2 * i) / 12;
+                const distance = 50 + Math.random() * 30;
+                particle.style.setProperty('--random-x', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--random-y', Math.sin(angle) * distance + 'px');
+                
+                particles.appendChild(particle);
+            }
+            
+            setTimeout(() => {
+                if (particles.parentNode) {
+                    particles.parentNode.removeChild(particles);
+                }
+            }, 1000);
+        }
+
+        // إظهار الرسالة النهائية
+        function showFinalMessage() {
+            document.getElementById('finalMessage').classList.add('show');
+            
+            // إخفاء الرسالة بعد 5 ثوان
+            setTimeout(() => {
+                document.getElementById('finalMessage').classList.remove('show');
+                animationInProgress = false;
+            }, 5000);
+        }
+
+        // إعادة تعيين الجدول
+        function resetTable() {
+            if (animationInProgress) return;
+            
+            // إيقاف العد التنازلي إذا كان يعمل
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            // إزالة جميع العناصر الطائرة
+            const flyingElements = document.querySelectorAll('.flying-element');
+            flyingElements.forEach(el => el.remove());
+            
+            // إعادة إظهار العناصر الأصلية
+            const elements = document.querySelectorAll('.element:not(.empty)');
+            elements.forEach(element => {
+                element.style.opacity = '1';
+                element.style.transform = 'scale(1)';
+            });
+            
+            // إخفاء الرسالة النهائية
+            document.getElementById('finalMessage').classList.remove('show');
+            
+            // إعادة تعيين العدادات
+            flyingElementsCount = 0;
+            elementCounter = 0;
+            animationInProgress = false;
+            playSound('reset');
+            
+            // إخفاء شريط التقدم
+            const progressContainer = document.getElementById('progressContainer');
+            if (progressContainer) {
+                progressContainer.style.display = 'none';
+            }
+            
+            // إعادة إظهار العد التنازلي
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.style.display = 'block';
+            
+            // إعادة العنوان الأصلي
+            document.title = 'الجدول الدوري المتحرك - رحلة العناصر';
+            
+            // إضافة تأثير انتعاش للجدول
+            const table = document.getElementById('periodicTable');
+            table.style.animation = 'none';
+            setTimeout(() => {
+                table.style.animation = 'tableRefresh 1s ease-out';
+                // بدء العد التنازلي مرة أخرى
+                setTimeout(() => {
+                    startCountdown();
+                }, 1000);
+            }, 50);
+        }
+
+        // إنشاء عداد مرئي
+        function createProgressBar() {
+            const progressContainer = document.createElement('div');
+            progressContainer.id = 'progressContainer';
+            progressContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.8);
+                padding: 15px;
+                border-radius: 10px;
+                border: 2px solid #ffd700;
+                color: white;
+                font-size: 14px;
+                z-index: 2000;
+                min-width: 200px;
+                text-align: center;
+                display: none;
+            `;
+            
+            progressContainer.innerHTML = `
+                <div>🧪 رحلة الفصل</div>
+                <div id="progressText">0 من ${elementsData.length}</div>
+                <div style="background: rgba(255, 255, 255, 0.2); height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden;">
+                    <div id="progressBar" style="background: linear-gradient(90deg, #ffd700, #ff8c00); height: 100%; width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+                <div id="currentElement" style="color: #ffd700; font-weight: bold;">الرحلة بدأت! </div>
+            `;
+            
+            document.body.appendChild(progressContainer);
+        }
+
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressText = document.getElementById('progressText');
+            const progressBar = document.getElementById('progressBar');
+            const currentElement = document.getElementById('currentElement');
+            
+            if (progressContainer) {
+                progressContainer.style.display = 'block';
+                progressText.textContent = `${elementCounter} من ${elementsData.length}`;
+                
+                const percentage = (elementCounter / elementsData.length) * 100;
+                progressBar.style.width = percentage + '%';
+                
+                if (elementCounter === elementsData.length) {
+                    currentElement.textContent = 'مكتمل! 🎉';
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                    }, 3000);
+                } else {
+                    currentElement.textContent = `العنصر التالي جاهز... ✨`;
+                }
+            }
+        }
+
+        // تحديث العداد
+        function updateCounter() {
+            elementCounter++;
+            console.log(`🚀 طار ${elementCounter} من أصل ${elementsData.length} عنصر - المتبقي: ${elementsData.length - elementCounter}`);
+            
+            // تحديث العنوان ليعكس التقدم
+            const progress = Math.round((elementCounter / elementsData.length) * 100);
+            document.title = `الجدول الدوري التفاعلي - ${progress}% مكتمل`;
+            
+            // تحديث شريط التقدم
+            updateProgressBar();
+        }
+
+        // تأثيرات صوتية محاكاة
+        function playSound(type) {
+            switch(type) {
+                case 'fly':
+                    console.log('🎵 عنصر يطير! ✈️');
+                    break;
+                case 'complete':
+                    console.log('🎉 تم إكمال الرحلة! جميع العناصر طارت بنجاح!');
+                    break;
+                case 'reset':
+                    console.log('🔄 إعادة تعيين الجدول - العناصر تعود لأماكنها');
+                    break;
+            }
+        }
+
+        // إظهار احصائيات العناصر
+        function showElementStats() {
+            const stats = {
+                'alkali': elementsData.filter(e => e.class === 'alkali').length,
+                'alkaline': elementsData.filter(e => e.class === 'alkaline').length,
+                'transition': elementsData.filter(e => e.class === 'transition').length,
+                'nonmetal': elementsData.filter(e => e.class === 'nonmetal').length,
+                'halogen': elementsData.filter(e => e.class === 'halogen').length,
+                'noble': elementsData.filter(e => e.class === 'noble').length,
+                'metalloid': elementsData.filter(e => e.class === 'metalloid').length,
+                'actinide': elementsData.filter(e => e.class === 'actinide').length
+            };
+            
+            console.log('📊 إحصائيات العناصر في الجدول:');
+            Object.entries(stats).forEach(([type, count]) => {
+                if (count > 0) {
+                    console.log(`${type}: ${count} عنصر`);
+                }
+            });
+        }
+
+        // تهيئة الصفحة
+        function init() {
+            createAnimatedBackground();
+            createPeriodicTable();
+            showElementStats();
+            
+            // إضافة رسالة ترحيب
+            console.log('🧪 مرحباً بك في الجدول الدوري التفاعلي!');
+            console.log('⌨️ اختصارات لوحة المفاتيح:');
+            console.log('  - R: إعادة تعيين');
+            console.log('  - Escape: إيقاف الرحلة');
+            
+            // بدء العد التنازلي تلقائياً
+            setTimeout(() => {
+                startCountdown();
+            }, 1000);
+            
+            // إضافة تأثير عند تحريك الماوس
+            document.addEventListener('mousemove', (e) => {
+                const particles = document.querySelectorAll('.bg-particle');
+                const mouseX = e.clientX / window.innerWidth - 0.5;
+                const mouseY = e.clientY / window.innerHeight - 0.5;
+                
+                particles.forEach((particle, index) => {
+                    if (index % 5 === 0) {
+                        const speed = 0.5;
+                        const x = mouseX * speed * 10;
+                        const y = mouseY * speed * 10;
+                        particle.style.transform = `translate(${x}px, ${y}px)`;
+                    }
+                });
+            });
+        }
+
+        // تشغيل التهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', init);
+
+        // إضافة اختصارات لوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                resetTable();
+            } else if (e.key === 'Escape') {
+                // إيقاف الرسوم المتحركة
+                if (animationInProgress) {
+                    resetTable();
+                }
+            }
+        });
+
+        // إضافة المزيد من التفاعلية
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.element') && !e.target.closest('.element').classList.contains('empty')) {
+                const element = e.target.closest('.element');
+                // إضافة تأثير التوهج المؤقت
+                element.style.boxShadow = '0 0 30px var(--element-color)';
+                element.style.transform = 'scale(1.1)';
+                
+                // عرض معلومات العنصر في الكونسول
+                const data = JSON.parse(element.dataset.elementData);
+                console.log(`🧪 عنصر: ${data.name} (${data.symbol}) - ${data.message}`);
+                
+                setTimeout(() => {
+                    element.style.boxShadow = '';
+                    element.style.transform = 'scale(1)';
+                }, 500);
+            }
+        });
+
+    </script>
+</body>
+</html>
