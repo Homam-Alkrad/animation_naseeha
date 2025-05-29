@@ -121,11 +121,7 @@
 			seconds = seconds < 10 ? "0" + seconds : seconds;
 
 			// Display result
-			var result = '<span class="digit">' + days + '</span> يوم ' +
-				'<span class="digit">' + hours + '</span> ساعة ' +
-				'<span class="digit">' + minutes + '</span> دقيقة ' +
-				'<span class="digit">' + seconds + '</span> ثانية';
-
+            var result = '<span class="digit">' + days + '</span> Days <span class="digit">' + hours + '</span> Hours <span class="digit">' + minutes + '</span> Minutes <span class="digit">' + seconds + '</span> Seconds';
 			$("#clock").html(result);
 		}
 
