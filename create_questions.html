@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>محرر نصوص مع معادلات</title>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11.10.0/lib/browser/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: "Tajawal", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 1200px;
+    }
+    
+    label {
+      font-weight: bold;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+      font-size: clamp(14px, 2.5vw, 16px);
+    }
+    
+    textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: clamp(14px, 2.5vw, 16px);
+      margin-bottom: 15px;
+      transition: border-color 0.3s;
+      font-family: "Calibri", "Tajawal", Arial, sans-serif;
+      direction: rtl;
+      text-align: right;
+    }
+    
+    /* Equation inputs should be LTR */
+    .equation-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: clamp(14px, 2.5vw, 16px);
+      margin-bottom: 15px;
+      transition: border-color 0.3s;
+      font-family: "Courier New", monospace;
+      direction: ltr !important;
+      text-align: left !important;
+      background: #f8f9ff;
+    }
+    
+    textarea:focus, select:focus, .equation-input:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .equations {
+      margin: 20px 0;
+    }
+    
+    .equation-group {
+      background: #f8f9ff;
+      padding: 15px;
+      border-radius: 10px;
+      border-right: 4px solid #3b82f6;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    
+    .equation-label {
+      font-size: clamp(12px, 2vw, 14px);
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .remove-equation {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+    
+    .remove-equation:hover {
+      background: #dc2626;
+    }
+    
+    .add-equation-controls {
+      margin: 15px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .options-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f0f9ff;
+      border-radius: 10px;
+      border-right: 4px solid #10b981;
+    }
+    
+    .options-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .options-layout {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .options-layout label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+    
+    .options-layout input[type="radio"] {
+      margin: 0;
+    }
+    
+    .options-container {
+      margin-top: 15px;
+    }
+    
+    .option-input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: clamp(12px, 2vw, 14px);
+      margin-bottom: 10px;
+      direction: ltr;
+      text-align: left;
+      font-family: "Courier New", monospace;
+      background: #f8f9ff;
+    }
+    
+    .buttons {
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    
+    button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: clamp(12px, 2vw, 15px);
+      font-weight: bold;
+      color: #fff;
+      background: #3b82f6;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    button.clear {
+      background: #ef4444;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    
+    button.clear:hover {
+      background: #dc2626;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    
+    button.add {
+      background: #10b981;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    button.add:hover {
+      background: #059669;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    button.download {
+      background: #9333ea;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+    }
+    
+    button.download:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+    }
+    
+    button.options {
+      background: #f59e0b;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+    
+    button.options:hover {
+      background: #d97706;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+    
+    button.newline {
+      background: #8b5cf6;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+    
+    button.newline:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    .preview {
+      border: 2px solid #e1e5e9;
+      border-radius: 15px;
+      padding: 25px;
+      min-height: 150px;
+      background: #ffffff;
+      font-size: clamp(16px, 3vw, 18px);
+      line-height: 2.2;
+      direction: rtl;
+      text-align: right;
+      font-family: "Calibri", "Tajawal", Arial, sans-serif;
+      width: 600px; /* Fixed width instead of percentage */
+      max-width: 90%; /* Responsive for mobile */
+      margin: 0 auto; /* Center the preview box */
+    }
+    
+    /* Make equations in preview display LTR */
+    .preview .katex {
+      direction: ltr !important;
+      display: inline-block;
+      margin: 0 5px;
+    }
+    
+    .preview .katex-display {
+      text-align: center !important;
+      margin: 15px 0;
+    }
+    
+    /* Options styling in preview */
+    .preview .options {
+      margin: 15px 0;
+      padding: 10px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    
+    .preview .options.inline {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .preview .options.two-lines {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .preview .options.four-lines .option {
+      margin-bottom: 8px;
+    }
+    
+    .preview .option {
+      font-size: clamp(14px, 2.5vw, 16px);
+      color: #333;
+      padding: 5px 0;
+      direction: ltr;
+      text-align: left;
+      font-family: "Calibri", "Times New Roman", serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .preview .option::before {
+      content: attr(data-label);
+      font-weight: bold;
+      margin-left: 5px;
+    }
+    
+    .preview .option .katex {
+      direction: ltr !important;
+      display: inline-block;
+      margin: 0;
+    }
+    
+    /* Style for error messages */
+    .error {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      display: inline-block;
+      direction: ltr;
+    }
+    
+    /* Enhanced download preview container - optimized for screenshot */
+    .download-container {
+      background: white;
+      padding: 30px 25px;
+      font-family: "Calibri", "Tajawal", Arial, sans-serif;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      line-height: 2.5 !important;
+      direction: rtl;
+      text-align: right;
+      width: 400px !important; /* Reduced width significantly */
+      max-width: 400px !important;
+      color: #1a1a1a !important;
+      border: 2px solid #2563eb;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    /* Enhanced text styling for download */
+    .download-container * {
+      font-weight: 600 !important;
+      color: #1a1a1a !important;
+      font-size: 16px !important;
+    }
+    
+    .download-container .katex {
+      direction: ltr !important;
+      display: inline-block !important;
+      margin: 0 8px !important;
+      font-size: 18px !important;
+      font-weight: 700 !important;
+    }
+    
+    .download-container .katex * {
+      font-weight: 700 !important;
+      font-size: 18px !important;
+    }
+    
+    .download-container .options {
+      direction: ltr !important;
+      text-align: left !important;
+      margin: 20px 0 !important;
+      padding: 15px 0 !important;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .download-container .options.inline {
+      display: flex !important;
+      gap: 20px !important;
+      flex-wrap: wrap !important;
+    }
+    
+    .download-container .options.two-lines {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+    }
+    
+    .download-container .options.four-lines {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+    
+    .download-container .option {
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      margin: 5px 0 !important;
+      padding: 5px 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    
+    .download-container .option::before {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      color: #2563eb !important;
+      margin-left: 5px !important;
+    }
+    
+    /* Hidden download container that will be used for screenshot */
+    .download-hidden {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      z-index: -1;
+      visibility: hidden;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+      
+      .buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      
+      .add-equation-controls {
+        flex-direction: column;
+      }
+      
+      .options-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      
+      .options-layout {
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .preview .options.inline {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .preview .options.two-lines {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .equation-group {
+        padding: 12px;
+      }
+      
+      .options-section {
+        padding: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+      
+      button {
+        padding: 14px 12px;
+      }
+      
+      .preview {
+        padding: 15px;
+      }
+      
+      .options-layout {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .add-equation-controls {
+        width: 100%;
+      }
+      
+      .add-equation-controls button {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .preview {
+        padding: 12px;
+      }
+      
+      .equation-group {
+        padding: 10px;
+      }
+      
+      .options-section {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <label>اكتب السؤال:</label>
+  <textarea id="textInput" placeholder="اكتب السؤال هنا... يمكنك إضافة أماكن للمعادلات باستخدام الأزرار أدناه"></textarea>
+
+  <div class="add-equation-controls">
+    <button class="newline" onclick="addNewLine()">إضافة سطر جديد</button>
+    <button class="add" onclick="addNewEquation()">إضافة معادلة جديدة</button>
+  </div>
+
+  <div id="equationsContainer" class="equations"></div>
+
+  <div class="options-section">
+    <label>خيارات السؤال:</label>
+    <div class="options-controls">
+      <button class="options" onclick="toggleOptionsSection()">إضافة خيارات</button>
+      <div class="options-layout">
+        <label>تخطيط الخيارات:</label>
+        <label><input type="radio" name="optionsLayout" value="inline" checked> نفس السطر</label>
+        <label><input type="radio" name="optionsLayout" value="two-lines"> سطرين</label>
+        <label><input type="radio" name="optionsLayout" value="four-lines"> أربعة أسطر</label>
+      </div>
+    </div>
+    
+    <div id="optionsContainer" class="options-container" style="display: none;">
+      <input type="text" id="optionA" class="option-input" placeholder="Enter mathematical expression for option A (e.g., x^2+3x+2)">
+      <input type="text" id="optionB" class="option-input" placeholder="Enter mathematical expression for option B (e.g., (x+1)(x+2))">
+      <input type="text" id="optionC" class="option-input" placeholder="Enter mathematical expression for option C (e.g., sin(x)+cos(x))">
+      <input type="text" id="optionD" class="option-input" placeholder="Enter mathematical expression for option D (e.g., ln(x)+e^x)">
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button onclick="displayEquations()">عرض المعادلات</button>
+    <button class="clear" onclick="clearAll()">مسح الكل</button>
+    <button class="download" onclick="downloadImage()">تحميل صورة</button>
+  </div>
+
+  <div class="preview" id="preview">
+    <p style="color: #888; text-align: center;">النتيجة ستظهر هنا بعد إدخال النص والمعادلات...</p>
+  </div>
+</div>
+
+<!-- Hidden container for download -->
+<div id="downloadContainer" class="download-container download-hidden"></div>
+
+<script>
+  let optionsVisible = false;
+  let equationCounter = 0;
+
+  function addNewLine() {
+    const textarea = document.getElementById("textInput");
+    const cursorPos = textarea.selectionStart;
+    const textBefore = textarea.value.substring(0, cursorPos);
+    const textAfter = textarea.value.substring(cursorPos);
+    
+    textarea.value = textBefore + '\n' + textAfter;
+    textarea.focus();
+    textarea.setSelectionRange(cursorPos + 1, cursorPos + 1);
+  }
+
+  function addNewEquation() {
+    equationCounter++;
+    const container = document.getElementById("equationsContainer");
+    
+    const group = document.createElement("div");
+    group.className = "equation-group";
+    group.id = "equationGroup" + equationCounter;
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-equation";
+    removeBtn.innerHTML = "×";
+    removeBtn.onclick = () => removeEquation(equationCounter);
+    
+    const label = document.createElement("div");
+    label.className = "equation-label";
+    label.textContent = `المعادلة رقم ${equationCounter}:`;
+    
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = "equation" + equationCounter;
+    input.className = "equation-input";
+    input.placeholder = `أدخل المعادلة (مثال: (x^2+3x+2)/(x+1) أو sin(x) + cos(y))`;
+    input.dir = "ltr";
+    
+    group.appendChild(removeBtn);
+    group.appendChild(label);
+    group.appendChild(input);
+    container.appendChild(group);
+    
+    // Automatically add placeholder in text area
+    const textarea = document.getElementById("textInput");
+    const cursorPos = textarea.selectionStart;
+    const textBefore = textarea.value.substring(0, cursorPos);
+    const textAfter = textarea.value.substring(cursorPos);
+    
+    textarea.value = textBefore + ` [[معادلة${equationCounter}]] ` + textAfter;
+    textarea.focus();
+    textarea.setSelectionRange(cursorPos + ` [[معادلة${equationCounter}]] `.length, cursorPos + ` [[معادلة${equationCounter}]] `.length);
+  }
+
+  function removeEquation(id) {
+    const group = document.getElementById("equationGroup" + id);
+    if (group) {
+      group.remove();
+    }
+  }
+
+  function toggleOptionsSection() {
+    const container = document.getElementById("optionsContainer");
+    optionsVisible = !optionsVisible;
+    container.style.display = optionsVisible ? "block" : "none";
+  }
+
+  function getOptionsHTML(isForDownload = false) {
+    const optionA = document.getElementById("optionA").value.trim();
+    const optionB = document.getElementById("optionB").value.trim();
+    const optionC = document.getElementById("optionC").value.trim();
+    const optionD = document.getElementById("optionD").value.trim();
+    
+    if (!optionA && !optionB && !optionC && !optionD) {
+      return "";
+    }
+    
+    const layout = document.querySelector('input[name="optionsLayout"]:checked').value;
+    let optionsHTML = `<div class="options ${layout}">`;
+    
+    const labels = ['A)', 'B)', 'C)', 'D)'];
+    const options = [optionA, optionB, optionC, optionD];
+    
+    options.forEach((option, index) => {
+      if (option) {
+        try {
+          const parsed = math.parse(option);
+          const latex = parsed.toTex({parenthesis: 'keep'});
+          const renderedMath = katex.renderToString(latex, {
+            throwOnError: false,
+            displayMode: false
+          });
+          
+          optionsHTML += `<div class="option" data-label="${labels[index]}">${renderedMath}</div>`;
+        } catch (error) {
+          optionsHTML += `<div class="option" data-label="${labels[index]}">${option}</div>`;
+        }
+      }
+    });
+    
+    optionsHTML += '</div>';
+    return optionsHTML;
+  }
+
+  function displayEquations() {
+    let text = document.getElementById("textInput").value;
+    const equations = document.querySelectorAll('.equation-input');
+
+    if (!text.trim()) {
+      alert("يرجى إدخال نص السؤال أولاً");
+      return;
+    }
+
+    equations.forEach((equationInput, index) => {
+      const expr = equationInput.value.trim();
+      if (!expr) return;
+      
+      const equationNumber = index + 1;
+      
+      try {
+        const parsed = math.parse(expr);
+        const latex = parsed.toTex({parenthesis: 'keep'});
+        
+        const renderedEquation = katex.renderToString(latex, {
+          throwOnError: false,
+          displayMode: false
+        });
+        
+        text = text.replace(`[[معادلة${equationNumber}]]`, 
+          `<span class="katex-wrapper" style="direction: ltr; display: inline-block; margin: 0 5px;">${renderedEquation}</span>`
+        );
+      } catch (error) {
+        console.error("خطأ في المعادلة " + equationNumber + ":", error);
+        text = text.replace(`[[معادلة${equationNumber}]]`, 
+          `<span class="error">خطأ في المعادلة ${equationNumber}</span>`
+        );
+      }
+    });
+
+    const optionsHTML = getOptionsHTML();
+    if (optionsHTML) {
+      text += optionsHTML;
+    }
+
+    text = text.replace(/\n/g, '<br>');
+
+    const preview = document.getElementById("preview");
+    preview.innerHTML = text;
+    
+    const katexElements = preview.querySelectorAll('.katex');
+    katexElements.forEach(eq => {
+      eq.style.direction = 'ltr';
+      eq.style.display = 'inline-block';
+    });
+  }
+
+  function clearAll() {
+    if (confirm("هل أنت متأكد من مسح جميع البيانات؟")) {
+      document.getElementById("textInput").value = "";
+      document.getElementById("equationsContainer").innerHTML = "";
+      document.getElementById("optionA").value = "";
+      document.getElementById("optionB").value = "";
+      document.getElementById("optionC").value = "";
+      document.getElementById("optionD").value = "";
+      document.getElementById("optionsContainer").style.display = "none";
+      optionsVisible = false;
+      equationCounter = 0;
+      document.getElementById("preview").innerHTML = '<p style="color: #888; text-align: center;">النتيجة ستظهر هنا بعد إدخال النص والمعادلات...</p>';
+    }
+  }
+
+  function downloadImage() {
+    const preview = document.getElementById("preview");
+    if (!preview.innerHTML.trim() || preview.innerHTML.includes("النتيجة ستظهر هنا")) {
+      alert("يرجى إنشاء المحتوى أولاً قبل التحميل");
+      return;
+    }
+    
+    // Simply take screenshot of the preview box as is - no width changes
+    setTimeout(() => {
+      html2canvas(preview, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: preview.offsetWidth,
+        height: preview.offsetHeight,
+        scrollX: 0,
+        scrollY: 0,
+        foreignObjectRendering: false,
+        logging: false
+      }).then(canvas => {
+        // Create download link
+        const link = document.createElement("a");
+        link.download = "سؤال_مع_معادلات_" + new Date().getTime() + ".png";
+        link.href = canvas.toDataURL("image/png", 1.0);
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }).catch(error => {
+        console.error("خطأ في تحميل الصورة:", error);
+        alert("حدث خطأ أثناء تحميل الصورة");
+      });
+    }, 500);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      displayEquations();
+    }
+  });
+</script>
+
+</body>
+</html>
