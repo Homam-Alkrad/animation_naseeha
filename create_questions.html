@@ -8,14 +8,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Times+New+Roman&display=swap');
     
     * {
       box-sizing: border-box;
     }
     
     body {
-      font-family: "Tajawal", Arial, sans-serif;
+      font-family: "Amiri", "Times New Roman", serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       justify-content: center;
@@ -308,12 +308,12 @@
     }
     
     .preview .option {
-      font-size: clamp(14px, 2.5vw, 16px);
+      font-size: clamp(17px, 2.5vw, 19px); /* Increased by 3px */
       color: #333;
       padding: 5px 0;
       direction: ltr;
       text-align: left;
-      font-family: "Calibri", "Times New Roman", serif;
+      font-family: "Amiri", "Times New Roman", serif; /* Formal exam font */
       display: flex;
       align-items: center;
       gap: 10px;
@@ -321,8 +321,9 @@
     
     .preview .option::before {
       content: attr(data-label);
-      font-weight: bold;
+      font-weight: normal; /* Changed from bold to normal */
       margin-left: 5px;
+      color: #333;
     }
     
     .preview .option .katex {
