@@ -443,6 +443,36 @@
         padding: 20px;
       }
       
+      .preview {
+        width: 95% !important; /* Use more width on mobile */
+        max-width: none !important;
+        padding: 20px !important;
+        font-size: 16px !important;
+        line-height: 1.8 !important; /* Reduce line height on mobile */
+      }
+      
+      /* Compact mobile equations */
+      .preview .katex {
+        font-size: 16px !important;
+        margin: 0 3px !important;
+      }
+      
+      .preview .options.inline {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+      
+      .preview .options.two-lines {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
+      
+      .preview .option {
+        font-size: 14px !important;
+        padding: 3px 0 !important;
+      }
+      
       .buttons {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
@@ -464,16 +494,6 @@
         gap: 10px;
       }
       
-      .preview .options.inline {
-        flex-direction: column;
-        gap: 8px;
-      }
-      
-      .preview .options.two-lines {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-      
       .equation-group {
         padding: 12px;
       }
@@ -484,16 +504,29 @@
     }
     
     @media (max-width: 480px) {
+      .preview {
+        width: 98% !important;
+        padding: 15px !important;
+        font-size: 14px !important;
+        line-height: 1.6 !important; /* Even more compact on small phones */
+      }
+      
+      .preview .katex {
+        font-size: 14px !important;
+        margin: 0 2px !important;
+      }
+      
+      .preview .option {
+        font-size: 13px !important;
+        padding: 2px 0 !important;
+      }
+      
       .buttons {
         grid-template-columns: 1fr;
       }
       
       button {
         padding: 14px 12px;
-      }
-      
-      .preview {
-        padding: 15px;
       }
       
       .options-layout {
@@ -517,7 +550,16 @@
       }
       
       .preview {
-        padding: 12px;
+        padding: 12px !important;
+        line-height: 1.5 !important; /* Most compact for very small screens */
+      }
+      
+      .preview .katex {
+        font-size: 13px !important;
+      }
+      
+      .preview .option {
+        font-size: 12px !important;
       }
       
       .equation-group {
