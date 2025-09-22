@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>محرر نصوص مع معادلات</title>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11.10.0/lib/browser/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: "Times New Roman", serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 1200px;
+    }
+    
+    label {
+      font-weight: bold;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+      font-size: clamp(16px, 2.5vw, 18px);
+    }
+    
+    textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: clamp(16px, 2.5vw, 18px);
+      margin-bottom: 15px;
+      transition: border-color 0.3s;
+      font-family: "Times New Roman", serif;
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .equation-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: clamp(16px, 2.5vw, 18px);
+      margin-bottom: 15px;
+      transition: border-color 0.3s;
+      font-family: "Courier New", monospace;
+      direction: ltr !important;
+      text-align: left !important;
+      background: #f8f9ff;
+    }
+    
+    textarea:focus, select:focus, .equation-input:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .equations {
+      margin: 20px 0;
+    }
+    
+    .equation-group {
+      background: #f8f9ff;
+      padding: 15px;
+      border-radius: 10px;
+      border-right: 4px solid #3b82f6;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    
+    .equation-type-control {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    
+    .equation-type-control input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    
+    .equation-label {
+      font-size: clamp(14px, 2vw, 16px);
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .remove-equation {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+    
+    .remove-equation:hover {
+      background: #dc2626;
+    }
+    
+    .add-equation-controls {
+      margin: 15px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .options-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f0f9ff;
+      border-radius: 10px;
+      border-right: 4px solid #10b981;
+    }
+    
+    .source-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #fff7ed;
+      border-radius: 10px;
+      border-right: 4px solid #f59e0b;
+    }
+    
+    .options-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .source-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .options-layout, .color-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .options-layout label, .color-controls label {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+    
+    .options-layout input[type="radio"], .color-controls input[type="radio"] {
+      margin: 0;
+    }
+    
+    .options-container, .source-container {
+      margin-top: 15px;
+    }
+    
+    .option-input, .source-input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: clamp(14px, 2vw, 16px);
+      margin-bottom: 10px;
+      direction: ltr;
+      text-align: left;
+      font-family: "Courier New", monospace;
+      background: #f8f9ff;
+    }
+    
+    .source-input {
+      direction: rtl;
+      text-align: right;
+      font-family: "Times New Roman", serif;
+      background: #fffbf0;
+    }
+
+    .option-group {
+      background: #f0f4ff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-right: 3px solid #3b82f6;
+    }
+
+    .option-type-control {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .option-type-control input[type="checkbox"] {
+      transform: scale(1.1);
+    }
+    
+    .buttons {
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    
+    button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: bold;
+      color: #fff;
+      background: #3b82f6;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    button.clear {
+      background: #ef4444;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    
+    button.clear:hover {
+      background: #dc2626;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    
+    button.add {
+      background: #10b981;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    button.add:hover {
+      background: #059669;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    button.download {
+      background: #9333ea;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+    }
+    
+    button.download:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4);
+    }
+    
+    button.options {
+      background: #f59e0b;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+    
+    button.options:hover {
+      background: #d97706;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+    
+    button.source {
+      background: #f59e0b;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+    
+    button.source:hover {
+      background: #d97706;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+    
+    button.newline {
+      background: #8b5cf6;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+    
+    button.newline:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    .preview {
+      border: 2px solid #e1e5e9;
+      border-radius: 15px;
+      padding: 25px;
+      min-height: 150px;
+      background: #ffffff;
+      font-size: clamp(20px, 3vw, 22px);
+      line-height: 2.2;
+      direction: rtl;
+      text-align: right;
+      font-family: "Times New Roman", serif;
+      width: 600px;
+      max-width: 90%;
+      margin: 0 auto;
+    }
+    
+    .source-text {
+      display: inline;
+      font-size: clamp(18px, 3vw, 20px);
+      font-weight: bold;
+      direction: rtl;
+      margin-left: 10px;
+    }
+    
+    .source-green { color: #065f46; }
+    .source-yellow { color: #b8860b; }
+    .source-white { color: #ffffff; }
+    .source-black { color: #000; }
+    .source-white-text { color: #fff; }
+    .source-red { color: #dc2626; }
+    .source-dark-blue { color: #1e3a8a; }
+    .source-dark-green { color: #065f46; }
+    
+    .preview .katex {
+      direction: ltr !important;
+      display: inline-block;
+      margin: 0 5px;
+    }
+    
+    .preview .katex-wrapper.equation-normal .katex {
+      font-size: 18px !important;
+    }
+    
+    .preview .katex-wrapper.equation-normal .katex * {
+      font-size: 18px !important;
+    }
+    
+    .preview .katex-wrapper.equation-fraction .katex {
+      font-size: inherit;
+    }
+    
+    .preview .katex-display {
+      text-align: center !important;
+      margin: 15px 0;
+    }
+    
+    .preview .options {
+      margin: 15px 0;
+      padding: 10px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    
+    .preview .options.inline {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .preview .options.two-lines {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .preview .options.four-lines .option {
+      margin-bottom: 8px;
+    }
+    
+    .preview .option {
+      font-size: clamp(19px, 2.5vw, 21px);
+      color: #333;
+      padding: 5px 0;
+      direction: ltr;
+      text-align: left;
+      font-family: "Times New Roman", serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .preview .option.option-normal .katex {
+      font-size: 18px !important;
+    }
+    
+    .preview .option.option-normal .katex * {
+      font-size: 18px !important;
+    }
+    
+    .preview .option.option-fraction .katex {
+      font-size: inherit;
+    }
+    
+    .preview .option::before {
+      content: attr(data-label);
+      font-weight: normal;
+      margin-left: 5px;
+      color: #333;
+    }
+    
+    .preview .option .katex {
+      direction: ltr !important;
+      display: inline-block;
+      margin: 0;
+    }
+    
+    .error {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      display: inline-block;
+      direction: ltr;
+    }
+    
+    .download-container {
+      background: white;
+      padding: 30px 25px;
+      font-family: "Times New Roman", serif;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      line-height: 2.5 !important;
+      direction: rtl;
+      text-align: right;
+      width: 400px !important;
+      max-width: 400px !important;
+      color: #1a1a1a !important;
+      border: 2px solid #2563eb;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .download-container * {
+      font-weight: 600 !important;
+      color: #1a1a1a !important;
+      font-size: 18px !important;
+    }
+    
+    .download-container .katex {
+      direction: ltr !important;
+      display: inline-block !important;
+      margin: 0 8px !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      vertical-align: middle !important;
+    }
+    
+    .download-container .katex * {
+      font-weight: 700 !important;
+      font-size: 16px !important;
+    }
+    
+    .download-container .source-text {
+      display: inline;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      direction: rtl;
+      margin-left: 10px;
+    }
+    
+    .download-container .options {
+      direction: ltr !important;
+      text-align: left !important;
+      margin: 20px 0 !important;
+      padding: 15px 0 !important;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .download-container .options.inline {
+      display: flex !important;
+      gap: 20px !important;
+      flex-wrap: wrap !important;
+    }
+    
+    .download-container .options.two-lines {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+    }
+    
+    .download-container .options.four-lines {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+    
+    .download-container .option {
+      font-size: 18px !important;
+      font-weight: normal !important;
+      margin: 5px 0 !important;
+      padding: 5px 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    
+    .download-container .option::before {
+      font-size: 18px !important;
+      font-weight: normal !important;
+      color: #333 !important;
+      margin-left: 5px !important;
+    }
+    
+    .download-hidden {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      z-index: -1;
+      visibility: hidden;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+      
+      .preview {
+        width: 95% !important;
+        max-width: none !important;
+        padding: 20px !important;
+        font-size: 18px !important;
+        line-height: 1.8 !important;
+      }
+      
+      .preview .katex {
+        font-size: 16px !important;
+        margin: 0 3px !important;
+      }
+      
+      .preview .options.inline {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+      
+      .preview .options.two-lines {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
+      
+      .preview .option {
+        font-size: 16px !important;
+        padding: 3px 0 !important;
+      }
+      
+      .buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      
+      .add-equation-controls {
+        flex-direction: column;
+      }
+      
+      .options-controls, .source-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      
+      .options-layout, .color-controls {
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .equation-group {
+        padding: 12px;
+      }
+      
+      .options-section, .source-section {
+        padding: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .preview {
+        width: 98% !important;
+        padding: 15px !important;
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+      }
+      
+      .preview .katex {
+        font-size: 14px !important;
+        margin: 0 2px !important;
+      }
+      
+      .preview .option {
+        font-size: 15px !important;
+        padding: 2px 0 !important;
+      }
+      
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+      
+      button {
+        padding: 14px 12px;
+      }
+      
+      .options-layout, .color-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .add-equation-controls {
+        width: 100%;
+      }
+      
+      .add-equation-controls button {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .preview {
+        padding: 12px !important;
+        line-height: 1.5 !important;
+      }
+      
+      .preview .katex {
+        font-size: 13px !important;
+      }
+      
+      .preview .option {
+        font-size: 14px !important;
+      }
+      
+      .equation-group {
+        padding: 10px;
+      }
+      
+      .options-section, .source-section {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <label>اكتب السؤال:</label>
+  <textarea id="textInput" placeholder="اكتب السؤال هنا... يمكنك إضافة أماكن للمعادلات باستخدام الأزرار أدناه"></textarea>
+
+  <div class="add-equation-controls">
+    <button class="newline" onclick="addNewLine()">إضافة سطر جديد</button>
+    <button class="add" onclick="addNewEquation()">إضافة معادلة جديدة</button>
+  </div>
+
+  <div id="equationsContainer" class="equations"></div>
+
+  <div class="source-section">
+    <label>مصدر السؤال:</label>
+    <div class="source-controls">
+      <button class="source" onclick="toggleSourceSection()">إضافة مصدر</button>
+      <div class="color-controls">
+        <label>لون النص:</label>
+        <label><input type="radio" name="sourceTextColor" value="black" checked> أسود</label>
+        <label><input type="radio" name="sourceTextColor" value="green"> أخضر غامق</label>
+        <label><input type="radio" name="sourceTextColor" value="yellow"> أصفر</label>
+        <label><input type="radio" name="sourceTextColor" value="red"> أحمر غامق</label>
+        <label><input type="radio" name="sourceTextColor" value="dark-blue"> أزرق غامق</label>
+      </div>
+    </div>
+    
+    <div id="sourceContainer" class="source-container" style="display: none;">
+      <input type="text" id="sourceText" class="source-input" placeholder="أدخل المصدر (مثال: وزارة التربية 2008 - اردني - سوري - اجنبي)">
+    </div>
+  </div>
+
+  <div class="options-section">
+    <label>خيارات السؤال:</label>
+    <div class="options-controls">
+      <button class="options" onclick="toggleOptionsSection()">إضافة خيارات</button>
+      <div class="options-layout">
+        <label>تخطيط الخيارات:</label>
+        <label><input type="radio" name="optionsLayout" value="inline" checked> نفس السطر</label>
+        <label><input type="radio" name="optionsLayout" value="two-lines"> سطرين</label>
+        <label><input type="radio" name="optionsLayout" value="four-lines"> أربعة أسطر</label>
+      </div>
+    </div>
+    
+    <div id="optionsContainer" class="options-container" style="display: none;">
+      <div class="option-group">
+        <div class="option-type-control">
+          <input type="checkbox" id="optionAFractionType">
+          <label for="optionAFractionType" style="cursor: pointer;">كسري</label>
+        </div>
+        <input type="text" id="optionA" class="option-input" placeholder="Enter mathematical expression for option A (e.g., x^2+3x+2)">
+      </div>
+      
+      <div class="option-group">
+        <div class="option-type-control">
+          <input type="checkbox" id="optionBFractionType">
+          <label for="optionBFractionType" style="cursor: pointer;">كسري</label>
+        </div>
+        <input type="text" id="optionB" class="option-input" placeholder="Enter mathematical expression for option B (e.g., (x+1)(x+2))">
+      </div>
+      
+      <div class="option-group">
+        <div class="option-type-control">
+          <input type="checkbox" id="optionCFractionType">
+          <label for="optionCFractionType" style="cursor: pointer;">كسري</label>
+        </div>
+        <input type="text" id="optionC" class="option-input" placeholder="Enter mathematical expression for option C (e.g., sin(x)+cos(x))">
+      </div>
+      
+      <div class="option-group">
+        <div class="option-type-control">
+          <input type="checkbox" id="optionDFractionType">
+          <label for="optionDFractionType" style="cursor: pointer;">كسري</label>
+        </div>
+        <input type="text" id="optionD" class="option-input" placeholder="Enter mathematical expression for option D (e.g., ln(x)+e^x)">
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button onclick="displayEquations()">عرض المعادلات</button>
+    <button class="clear" onclick="clearAll()">مسح الكل</button>
+    <button class="download" onclick="downloadImage()">تحميل صورة</button>
+  </div>
+
+  <div class="preview" id="preview">
+    <p style="color: #888; text-align: center;">النتيجة ستظهر هنا بعد إدخال النص والمعادلات...</p>
+  </div>
+</div>
+
+<div id="downloadContainer" class="download-container download-hidden"></div>
+
+<script>
+  let optionsVisible = false;
+  let sourceVisible = false;
+  let equationCounter = 0;
+
+  function addNewLine() {
+    const textarea = document.getElementById("textInput");
+    const cursorPos = textarea.selectionStart;
+    const textBefore = textarea.value.substring(0, cursorPos);
+    const textAfter = textarea.value.substring(cursorPos);
+    
+    textarea.value = textBefore + '\n' + textAfter;
+    textarea.focus();
+    textarea.setSelectionRange(cursorPos + 1, cursorPos + 1);
+  }
+
+  function addNewEquation() {
+    equationCounter++;
+    const container = document.getElementById("equationsContainer");
+    
+    const group = document.createElement("div");
+    group.className = "equation-group";
+    group.id = "equationGroup" + equationCounter;
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-equation";
+    removeBtn.innerHTML = "×";
+    removeBtn.onclick = () => removeEquation(equationCounter);
+    
+    const label = document.createElement("div");
+    label.className = "equation-label";
+    label.textContent = `المعادلة رقم ${equationCounter}:`;
+    
+    const typeControl = document.createElement("div");
+    typeControl.className = "equation-type-control";
+    
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "fractionType" + equationCounter;
+    checkbox.checked = false;
+    
+    const checkboxLabel = document.createElement("label");
+    checkboxLabel.htmlFor = "fractionType" + equationCounter;
+    checkboxLabel.textContent = "معادلة كسرية";
+    checkboxLabel.style.cursor = "pointer";
+    
+    typeControl.appendChild(checkbox);
+    typeControl.appendChild(checkboxLabel);
+    
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = "equation" + equationCounter;
+    input.className = "equation-input";
+    input.placeholder = `أدخل المعادلة (مثال: (x^2+3x+2)/(x+1) أو sin(x) + cos(y))`;
+    input.dir = "ltr";
+    
+    group.appendChild(removeBtn);
+    group.appendChild(label);
+    group.appendChild(typeControl);
+    group.appendChild(input);
+    container.appendChild(group);
+    
+    const textarea = document.getElementById("textInput");
+    const cursorPos = textarea.selectionStart;
+    const textBefore = textarea.value.substring(0, cursorPos);
+    const textAfter = textarea.value.substring(cursorPos);
+    
+    textarea.value = textBefore + ` [[معادلة${equationCounter}]] ` + textAfter;
+    textarea.focus();
+    textarea.setSelectionRange(cursorPos + ` [[معادلة${equationCounter}]] `.length, cursorPos + ` [[معادلة${equationCounter}]] `.length);
+  }
+
+  function removeEquation(id) {
+    const group = document.getElementById("equationGroup" + id);
+    if (group) {
+      group.remove();
+    }
+  }
+
+  function toggleOptionsSection() {
+    const container = document.getElementById("optionsContainer");
+    optionsVisible = !optionsVisible;
+    container.style.display = optionsVisible ? "block" : "none";
+  }
+
+  function toggleSourceSection() {
+    const container = document.getElementById("sourceContainer");
+    sourceVisible = !sourceVisible;
+    container.style.display = sourceVisible ? "block" : "none";
+  }
+
+  function getSourceHTML() {
+    const sourceText = document.getElementById("sourceText").value.trim();
+    if (!sourceText) return "";
+    
+    const textColor = document.querySelector('input[name="sourceTextColor"]:checked').value;
+    
+    return `<span class="source-text source-${textColor}">${sourceText} : </span>`;
+  }
+
+  function getOptionsHTML(isForDownload = false) {
+    const optionA = document.getElementById("optionA").value.trim();
+    const optionB = document.getElementById("optionB").value.trim();
+    const optionC = document.getElementById("optionC").value.trim();
+    const optionD = document.getElementById("optionD").value.trim();
+    
+    if (!optionA && !optionB && !optionC && !optionD) {
+      return "";
+    }
+    
+    const layout = document.querySelector('input[name="optionsLayout"]:checked').value;
+    
+    let optionsHTML = `<div class="options ${layout}">`;
+    
+    const labels = ['a)', 'b)', 'c)', 'd)'];
+    const options = [optionA, optionB, optionC, optionD];
+    const optionIds = ['optionAFractionType', 'optionBFractionType', 'optionCFractionType', 'optionDFractionType'];
+    
+    options.forEach((option, index) => {
+      if (option) {
+        const isFraction = document.getElementById(optionIds[index])?.checked || false;
+        const optionClass = isFraction ? 'option-fraction' : 'option-normal';
+        
+        try {
+            let latex = parseMathExpression(option);
+
+          latex = latex.replace(/:=/g, '=');
+          
+          const renderedMath = katex.renderToString(latex, {
+            throwOnError: false,
+            displayMode: false
+          });
+          
+          optionsHTML += `<div class="option ${optionClass}" data-label="${labels[index]}">${renderedMath}</div>`;
+        } catch (error) {
+          optionsHTML += `<div class="option ${optionClass}" data-label="${labels[index]}">${option}</div>`;
+        }
+      }
+    });
+    
+    optionsHTML += '</div>';
+    return optionsHTML;
+  }
+
+  function displayEquations() {
+    let text = document.getElementById("textInput").value;
+    const equations = document.querySelectorAll('.equation-input');
+
+    if (!text.trim()) {
+      alert("يرجى إدخال نص السؤال أولاً");
+      return;
+    }
+
+    const sourceHTML = getSourceHTML();
+    let finalText = sourceHTML + text;
+
+    equations.forEach((equationInput, index) => {
+      const expr = equationInput.value.trim();
+      if (!expr) return;
+      
+      const equationNumber = index + 1;
+      const isFraction = document.getElementById("fractionType" + equationNumber)?.checked || false;
+      
+      try {
+        const parsed = math.parse(expr);
+        let latex = parsed.toTex({parenthesis: 'keep'});
+        
+        latex = latex.replace(/:=/g, '=');
+        
+        const renderedEquation = katex.renderToString(latex, {
+          throwOnError: false,
+          displayMode: false
+        });
+        
+        const equationClass = isFraction ? 'equation-fraction' : 'equation-normal';
+        
+        finalText = finalText.replace(`[[معادلة${equationNumber}]]`, 
+          `<span class="katex-wrapper ${equationClass}" style="direction: ltr; display: inline-block; margin: 0 5px;">${renderedEquation}</span>`
+        );
+      } catch (error) {
+        console.error("خطأ في المعادلة " + equationNumber + ":", error);
+        finalText = finalText.replace(`[[معادلة${equationNumber}]]`, 
+          `<span class="error">خطأ في المعادلة ${equationNumber}</span>`
+        );
+      }
+    });
+
+    const optionsHTML = getOptionsHTML();
+    if (optionsHTML) {
+      finalText += optionsHTML;
+    }
+
+    finalText = finalText.replace(/\n/g, '<br>');
+
+    const preview = document.getElementById("preview");
+    preview.innerHTML = finalText;
+    
+    const katexElements = preview.querySelectorAll('.katex');
+    katexElements.forEach(eq => {
+      eq.style.direction = 'ltr';
+      eq.style.display = 'inline-block';
+    });
+  }
+
+  function clearAll() {
+    if (confirm("هل أنت متأكد من مسح جميع البيانات؟")) {
+      document.getElementById("textInput").value = "";
+      document.getElementById("equationsContainer").innerHTML = "";
+      document.getElementById("optionA").value = "";
+      document.getElementById("optionB").value = "";
+      document.getElementById("optionC").value = "";
+      document.getElementById("optionD").value = "";
+      document.getElementById("sourceText").value = "";
+      document.getElementById("optionsContainer").style.display = "none";
+      document.getElementById("sourceContainer").style.display = "none";
+      document.getElementById("optionAFractionType").checked = false;
+      document.getElementById("optionBFractionType").checked = false;
+      document.getElementById("optionCFractionType").checked = false;
+      document.getElementById("optionDFractionType").checked = false;
+      optionsVisible = false;
+      sourceVisible = false;
+      equationCounter = 0;
+      document.getElementById("preview").innerHTML = '<p style="color: #888; text-align: center;">النتيجة ستظهر هنا بعد إدخال النص والمعادلات...</p>';
+    }
+  }
+
+  function downloadImage() {
+    const preview = document.getElementById("preview");
+    if (!preview.innerHTML.trim() || preview.innerHTML.includes("النتيجة ستظهر هنا")) {
+      alert("يرجى إنشاء المحتوى أولاً قبل التحميل");
+      return;
+    }
+    
+    setTimeout(() => {
+      html2canvas(preview, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: preview.offsetWidth,
+        height: preview.offsetHeight,
+        scrollX: 0,
+        scrollY: 0,
+        foreignObjectRendering: false,
+        logging: false
+      }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "سؤال_مع_معادلات_" + new Date().getTime() + ".png";
+        link.href = canvas.toDataURL("image/png", 1.0);
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }).catch(error => {
+        console.error("خطأ في تحميل الصورة:", error);
+        alert("حدث خطأ أثناء تحميل الصورة");
+      });
+    }, 500);
+  }
+// 🟢 دالة لتحويل النص الرياضي (مع أو بدون مساواة) إلى LaTeX
+function parseMathExpression(expr) {
+  let latex = "";
+
+  try {
+    // حالة فيها "=" (معادلة)
+    if (expr.includes("=")) {
+      // نتأكد انه في بس مساواة وحدة
+      const parts = expr.split("=");
+      if (parts.length === 2) {
+        const left = parts[0].trim();
+        const right = parts[1].trim();
+
+        // نحول كل طرف للاتكس
+        const leftLatex = math.parse(left).toTex({ parenthesis: 'keep' });
+        const rightLatex = math.parse(right).toTex({ parenthesis: 'keep' });
+
+        latex = leftLatex + " = " + rightLatex;
+      } else {
+        // لو في أكتر من مساواة، نخلي النص زي ما هو
+        latex = expr;
+      }
+    } 
+    // حالة تعبير عادي بدون مساواة
+    else {
+      const parsed = math.parse(expr);
+      latex = parsed.toTex({ parenthesis: 'keep' });
+    }
+  } catch (error) {
+    console.error("❌ خطأ في تحليل التعبير:", expr, error);
+    latex = expr; // fallback: نعرض النص نفسه إذا صار خطأ
+  }
+
+  return latex;
+}
+
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      displayEquations();
+    }
+  });
+</script>
+
+</body>
+</html>
